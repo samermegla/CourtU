@@ -11,29 +11,42 @@ class SignUpPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 135),
 
-              // Logo
-              Center(
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  width: 150,
-                  height: 150,
-                  filterQuality: FilterQuality.high,
-                ),
-              ),
-              
               const Spacer(),
-
+              
+              // Sign in Button
               SizedBox(
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 108, 121, 108),
+                    backgroundColor: const Color.fromARGB(255, 146, 158, 146),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Sign Up button
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 100, 194, 100),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -45,6 +58,7 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 25),
             ],
           ),
         ),

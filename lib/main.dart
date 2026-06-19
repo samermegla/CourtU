@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'signup_page.dart';
+import 'pages/signup_page.dart';
+import 'pages/welcome_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SignUpPage(),
+      home: const WelcomePage(),
     );
   }
 }
