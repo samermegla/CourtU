@@ -23,7 +23,7 @@ class _WelcomePageState extends State<WelcomePage>
     );
 
     // Logo slides up
-    _logoSlideUp = Tween<double>(begin: 0, end: -120).animate(
+    _logoSlideUp = Tween<double>(begin: 100, end: -175).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
@@ -39,7 +39,9 @@ class _WelcomePageState extends State<WelcomePage>
     );
 
     // Start animation when page loads
+   Future.delayed(const Duration(seconds: 2), () {
     _controller.forward();
+});
   }
 
   @override
@@ -120,7 +122,7 @@ class _WelcomePageState extends State<WelcomePage>
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF4CAF50),
+                                  backgroundColor: const Color.fromARGB(255, 11, 112, 207),
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
@@ -136,7 +138,7 @@ class _WelcomePageState extends State<WelcomePage>
                               ),
                             ),
 
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 10),
 
                             // Sign In button
                             SizedBox(
@@ -145,8 +147,8 @@ class _WelcomePageState extends State<WelcomePage>
                               child: OutlinedButton(
                                 onPressed: () {},
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  side: const BorderSide(color: Colors.white),
+                                  foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                                  side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
                                   ),
