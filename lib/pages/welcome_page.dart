@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'signup_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -22,7 +23,6 @@ class _WelcomePageState extends State<WelcomePage>
       duration: const Duration(milliseconds: 3500),
     );
 
-    // Logo slides up
     _logoSlideUp = Tween<double>(begin: 100, end: -175).animate(
       CurvedAnimation(
         parent: _controller,
@@ -30,7 +30,6 @@ class _WelcomePageState extends State<WelcomePage>
       ),
     );
 
-    // Buttons fade in
     _buttonsFade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
@@ -38,10 +37,9 @@ class _WelcomePageState extends State<WelcomePage>
       ),
     );
 
-    // Start animation when page loads
-   Future.delayed(const Duration(seconds: 2), () {
-    _controller.forward();
-});
+    Future.delayed(const Duration(seconds: 2), () {
+      _controller.forward();
+    });
   }
 
   @override
@@ -55,7 +53,6 @@ class _WelcomePageState extends State<WelcomePage>
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
           SizedBox.expand(
             child: Image.asset(
               'assets/images/people_playing_vb.png',
@@ -63,17 +60,15 @@ class _WelcomePageState extends State<WelcomePage>
             ),
           ),
 
-          // Blur + dark overlay
           SizedBox.expand(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
               child: Container(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
               ),
             ),
           ),
 
-          // Animated content
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -81,7 +76,6 @@ class _WelcomePageState extends State<WelcomePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo slides up
                     Transform.translate(
                       offset: Offset(0, _logoSlideUp.value),
                       child: Column(
@@ -108,24 +102,48 @@ class _WelcomePageState extends State<WelcomePage>
 
                     const SizedBox(height: 40),
 
-                    // Buttons fade in
                     Opacity(
                       opacity: _buttonsFade.value,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 32.0),
                         child: Column(
                           children: [
-                            // Sign Up button
                             SizedBox(
                               width: double.infinity,
                               height: 54,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder:
+                                          (_, _, _) =>
+                                              const SignUpPage(),
+                                      transitionsBuilder: (
+                                        _,
+                                        animation,
+                                        _,
+                                        child,
+                                      ) =>
+                                          FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                      transitionDuration:
+                                          const Duration(
+                                              milliseconds: 500),
+                                    ),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(255, 11, 112, 207),
+                                  backgroundColor: const Color.fromARGB(
+                                    255, 11, 112, 207,
+                                  ),
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius:
+                                        BorderRadius.circular(14),
                                   ),
                                 ),
                                 child: const Text(
@@ -137,20 +155,21 @@ class _WelcomePageState extends State<WelcomePage>
                                 ),
                               ),
                             ),
-
                             const SizedBox(height: 10),
-
-                            // Sign In button
                             SizedBox(
                               width: double.infinity,
                               height: 54,
                               child: OutlinedButton(
                                 onPressed: () {},
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-                                  side: const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
+                                  foregroundColor: Colors.white,
+                                  side: const BorderSide(
+                                    color: Color.fromARGB(
+                                        255, 255, 255, 255),
+                                  ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
+                                    borderRadius:
+                                        BorderRadius.circular(14),
                                   ),
                                 ),
                                 child: const Text(
