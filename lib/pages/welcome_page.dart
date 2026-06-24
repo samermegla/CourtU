@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 import 'signup_page.dart';
 
@@ -23,7 +24,7 @@ class _WelcomePageState extends State<WelcomePage>
       duration: const Duration(milliseconds: 3500),
     );
 
-    _logoSlideUp = Tween<double>(begin: 100, end: -175).animate(
+    _logoSlideUp = Tween<double>(begin: 100.h, end: -125.h).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
@@ -82,15 +83,15 @@ class _WelcomePageState extends State<WelcomePage>
                         children: [
                           Image.asset(
                             'assets/images/logo.png',
-                            width: 150,
-                            height: 150,
+                            width: 150.w,
+                            height: 150.w,
                             filterQuality: FilterQuality.high,
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
+                          SizedBox(height: 16.h),
+                          Text(
                             'CourtU',
                             style: TextStyle(
-                              fontSize: 36,
+                              fontSize: 36.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               letterSpacing: 1.5,
@@ -100,18 +101,17 @@ class _WelcomePageState extends State<WelcomePage>
                       ),
                     ),
 
-                    const SizedBox(height: 40),
+                    SizedBox(height: 40.h),
 
                     Opacity(
                       opacity: _buttonsFade.value,
                       child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 32.0),
+                        padding: EdgeInsets.symmetric(horizontal: 32.w),
                         child: Column(
                           children: [
                             SizedBox(
                               width: double.infinity,
-                              height: 54,
+                              height: (54.h).clamp(44.0, 64.0),
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -143,22 +143,22 @@ class _WelcomePageState extends State<WelcomePage>
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Sign Up',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: 10.h),
                             SizedBox(
                               width: double.infinity,
-                              height: 54,
+                              height: (54.h).clamp(44.0, 64.0),
                               child: OutlinedButton(
                                 onPressed: () {},
                                 style: OutlinedButton.styleFrom(
@@ -169,12 +169,12 @@ class _WelcomePageState extends State<WelcomePage>
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Sign In',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 16.sp),
                                 ),
                               ),
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 
 class SignUpPage extends StatefulWidget {
@@ -69,16 +70,16 @@ class _SignUpPageState extends State<SignUpPage>
             child: SafeArea(
               child: TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.arrow_back, color: Colors.white70, size: 20),
-                    SizedBox(width: 4),
+                    Icon(Icons.arrow_back, color: Colors.white70, size: 20.sp),
+                    SizedBox(width: 4.w),
                     Text(
                       'Back',
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                       ),
                     ),
                   ],
@@ -90,12 +91,12 @@ class _SignUpPageState extends State<SignUpPage>
           LayoutBuilder(
             builder: (context, constraints) {
               final screenHeight = constraints.maxHeight;
-              const logoSectionHeight = 208.0;
-              const welcomeColumnHeight =
-                  logoSectionHeight + 40 + 118; // matches welcome page
+              final logoSectionHeight = 208.h;
+              final welcomeColumnHeight =
+                  logoSectionHeight + 40.h + 118.h;
               final logoTop = screenHeight / 2 -
                   welcomeColumnHeight / 2 -
-                  175;
+                  -125.h;
 
               return SingleChildScrollView(
                 child: ConstrainedBox(
@@ -108,15 +109,15 @@ class _SignUpPageState extends State<SignUpPage>
                         children: [
                           Image.asset(
                             'assets/images/logo.png',
-                            width: 150,
-                            height: 150,
+                            width: 150.w,
+                            height: 150.w,
                             filterQuality: FilterQuality.high,
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
+                          SizedBox(height: 16.h),
+                          Text(
                             'CourtU',
                             style: TextStyle(
-                              fontSize: 36,
+                              fontSize: 36.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               letterSpacing: 1.5,
@@ -124,7 +125,7 @@ class _SignUpPageState extends State<SignUpPage>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                       AnimatedBuilder(
                         animation: _controller,
                         builder: (context, child) {
@@ -134,8 +135,8 @@ class _SignUpPageState extends State<SignUpPage>
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32.w),
                           child: Column(
                             children: [
                               TextField(
@@ -151,12 +152,12 @@ class _SignUpPageState extends State<SignUpPage>
                                       .withValues(alpha: 0.1),
                                   border: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.h),
                               TextField(
                                 controller: _lastNameController,
                                 style: const TextStyle(
@@ -170,12 +171,12 @@ class _SignUpPageState extends State<SignUpPage>
                                       .withValues(alpha: 0.1),
                                   border: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.h),
                               TextField(
                                 controller: _emailController,
                                 keyboardType:
@@ -191,12 +192,12 @@ class _SignUpPageState extends State<SignUpPage>
                                       .withValues(alpha: 0.1),
                                   border: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.h),
                               TextField(
                                 controller: _passwordController,
                                 obscureText: _obscurePassword,
@@ -211,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage>
                                       .withValues(alpha: 0.1),
                                   border: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.circular(14),
+                                        BorderRadius.circular(14.r),
                                     borderSide: BorderSide.none,
                                   ),
                                   suffixIcon: IconButton(
@@ -230,10 +231,10 @@ class _SignUpPageState extends State<SignUpPage>
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 24),
+                              SizedBox(height: 24.h),
                               SizedBox(
                                 width: double.infinity,
-                                height: 54,
+                                height: (54.h).clamp(44.0, 64.0),
                                 child: ElevatedButton(
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
@@ -243,28 +244,28 @@ class _SignUpPageState extends State<SignUpPage>
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(14),
+                                          BorderRadius.circular(14.r),
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Sign Up',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16.h),
                               SizedBox(
                                 width: double.infinity,
-                                height: 54,
+                                height: (54.h).clamp(44.0, 64.0),
                                 child: OutlinedButton.icon(
                                   onPressed: () {},
-                                  icon: const Icon(
+                                  icon: Icon(
                                       Icons.g_mobiledata,
-                                      size: 28),
-                                  label: const Text(
+                                      size: 28.sp),
+                                  label: Text(
                                       'Sign up with Google'),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -272,12 +273,12 @@ class _SignUpPageState extends State<SignUpPage>
                                         color: Colors.white54),
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(14),
+                                          BorderRadius.circular(14.r),
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 32),
+                              SizedBox(height: 32.h),
                             ],
                           ),
                         ),
