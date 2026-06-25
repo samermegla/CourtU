@@ -25,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1200),
     );
     _formFade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
@@ -90,21 +90,13 @@ class _SignUpPageState extends State<SignUpPage>
 
           LayoutBuilder(
             builder: (context, constraints) {
-              final screenHeight = constraints.maxHeight;
-              final logoSectionHeight = 208.h;
-              final welcomeColumnHeight =
-                  logoSectionHeight + 40.h + 118.h;
-              final logoTop = screenHeight / 2 -
-                  welcomeColumnHeight / 2 -
-                  -125.h;
-
               return SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: screenHeight),
+                  constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: logoTop),
                       Column(
                         children: [
                           Image.asset(

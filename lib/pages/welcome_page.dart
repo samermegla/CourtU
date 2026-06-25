@@ -15,6 +15,7 @@ class _WelcomePageState extends State<WelcomePage>
   late AnimationController _controller;
   late Animation<double> _logoSlideUp;
   late Animation<double> _buttonsFade;
+  bool _isLeaving = false;
 
   @override
   void initState() {
@@ -40,6 +41,20 @@ class _WelcomePageState extends State<WelcomePage>
 
     Future.delayed(const Duration(seconds: 2), () {
       _controller.forward();
+    });
+  }
+
+  void _navigateTo(Widget page) {
+    setState(() => _isLeaving = true);
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => page),
+      ).then((_) {
+        if (!mounted) return;
+        setState(() => _isLeaving = false);
+      });
     });
   }
 
@@ -103,9 +118,12 @@ class _WelcomePageState extends State<WelcomePage>
 
                     SizedBox(height: 40.h),
 
-                    Opacity(
-                      opacity: _buttonsFade.value,
-                      child: Padding(
+                    AnimatedOpacity(
+                      opacity: _isLeaving ? 0 : 1,
+                      duration: const Duration(milliseconds: 400),
+                      child: Opacity(
+                        opacity: _buttonsFade.value,
+                        child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 32.w),
                         child: Column(
                           children: [
@@ -113,29 +131,8 @@ class _WelcomePageState extends State<WelcomePage>
                               width: double.infinity,
                               height: (54.h).clamp(44.0, 64.0),
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder:
-                                          (_, _, _) =>
-                                              const SignUpPage(),
-                                      transitionsBuilder: (
-                                        _,
-                                        animation,
-                                        _,
-                                        child,
-                                      ) =>
-                                          FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      ),
-                                      transitionDuration:
-                                          const Duration(
-                                              milliseconds: 500),
-                                    ),
-                                  );
-                                },
+                                onPressed: () => _navigateTo(
+                                    const SignUpPage()),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color.fromARGB(
                                     255, 11, 112, 207,
@@ -160,7 +157,8 @@ class _WelcomePageState extends State<WelcomePage>
                               width: double.infinity,
                               height: (54.h).clamp(44.0, 64.0),
                               child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () => _navigateTo(
+                                    const SignUpPage()),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   side: const BorderSide(
@@ -180,6 +178,7 @@ class _WelcomePageState extends State<WelcomePage>
                             ),
                           ],
                         ),
+                      ),
                       ),
                     ),
                   ],
