@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 import 'signup_page.dart';
+import 'signin_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -158,7 +159,7 @@ class _WelcomePageState extends State<WelcomePage>
                               height: (54.h).clamp(44.0, 64.0),
                               child: OutlinedButton(
                                 onPressed: () => _navigateTo(
-                                    const SignUpPage()),
+                                    const SignInPage()),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   side: const BorderSide(
