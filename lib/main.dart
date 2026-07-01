@@ -1,40 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'pages/welcome_page.dart';
+import 'screens/splash_screen.dart';
+import 'screens/onboarding_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+  runApp(const CourtUApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CourtUApp extends StatelessWidget {
+  const CourtUApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          title: 'CourtUp',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 189, 197, 189),
-              brightness: Brightness.dark,
-            ),
-            useMaterial3: true,
-          ),
-          home: const WelcomePage(),
-        );
-      },
+    return MaterialApp(
+      title: 'CourtU',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF080d18),
+        colorScheme: const ColorScheme.dark(
+          surface: Color(0xFF080d18),
+          primary: Color(0xFF4B6D8A),
+          secondary: Color(0xFF1ddf64),
+        ),
+      ),
+      home: const _AppFlow(),
     );
+  }
+}
+
+class _AppFlow extends StatefulWidget {
+  const _AppFlow();
+
+  @override
+  State<_AppFlow> createState() => _AppFlowState();
+}
+
+class _AppFlowState extends State<_AppFlow> {
+  String _screen = 'splash';
+
+  void _goTo(String screen) {
+    if (!mounted) return;
+    setState(() => _screen = screen);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switch (_screen) {
+      case 'splash':
+        return SplashScreen(onComplete: () => _goTo('onboarding'));
+      default:
+        return OnboardingScreen(
+          onGetStarted: () {},
+          onSignIn: () {},
+        );
+    }
   }
 }
