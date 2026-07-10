@@ -206,7 +206,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -295,15 +295,6 @@ class _EmojiCard extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-          // Outer glow
-          Container(
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.steel.withValues(alpha: 0.06),
-            ),
-          ),
           // Card
           Container(
             width: 180,
@@ -314,12 +305,13 @@ class _EmojiCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.steel.withValues(alpha: 0.13),
-                  AppColors.steel.withValues(alpha: 0.03),
+                  AppColors.steel.withValues(alpha: 0.08),
+                  AppColors.steel.withValues(alpha: 0.08),
                 ],
               ),
               border: Border.all(
                 color: AppColors.steel.withValues(alpha: 0.27),
+                width: 1.5,
               ),
             ),
             alignment: Alignment.center,
@@ -378,17 +370,20 @@ class _SlideText extends StatelessWidget {
             fontWeight: FontWeight.w900,
             color: Colors.white,
             height: 0.92,
-            letterSpacing: 0.4,
+            letterSpacing: 0.38,
           ),
         ),
         const SizedBox(height: 10),
-        Text(
-          body,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.dmSans(
-            fontSize: 14,
-            color: AppColors.mutedForeground,
-            height: 1.4,
+        SizedBox(
+          width: 260,
+          child: Text(
+            body,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.dmSans(
+              fontSize: 14,
+              color: AppColors.mutedForeground,
+              height: 1.6,
+            ),
           ),
         ),
       ],
@@ -465,9 +460,9 @@ class _BottomButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            _NextButton(onTap: onNext)
+            _GradientButton(label: 'NEXT', onTap: onNext)
           else ...[
-            _GetStartedButton(onTap: onGetStarted),
+            _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
             const SizedBox(height: 10),
             TextButton(
               onPressed: onSignIn,
@@ -494,79 +489,41 @@ class _BottomButtons extends StatelessWidget {
   }
 }
 
-class _NextButton extends StatelessWidget {
+class _GradientButton extends StatelessWidget {
+  final String label;
   final VoidCallback onTap;
-  const _NextButton({required this.onTap});
+
+  const _GradientButton({required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.steel,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.steel, AppColors.steelLight],
           ),
-          elevation: 8,
-          shadowColor: AppColors.steel.withValues(alpha: 0.45),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'NEXT',
+              label,
               style: GoogleFonts.barlowCondensed(
                 fontSize: 16,
                 fontWeight: FontWeight.w900,
+                color: Colors.white,
                 letterSpacing: 0.8,
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, size: 16),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GetStartedButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const _GetStartedButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.steel,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 8,
-          shadowColor: AppColors.steel.withValues(alpha: 0.45),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'GET STARTED',
-              style: GoogleFonts.barlowCondensed(
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0.8,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, size: 16),
+            const Icon(Icons.arrow_forward, size: 16, color: Colors.white),
           ],
         ),
       ),

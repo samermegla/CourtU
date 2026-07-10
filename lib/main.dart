@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'screens/signup_screen.dart';
+import 'screens/signin_screen.dart';
 
-void main() {
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, 
+  );
   runApp(const CourtUApp());
 }
 
@@ -49,11 +57,24 @@ class _AppFlowState extends State<_AppFlow> {
     switch (_screen) {
       case 'splash':
         return SplashScreen(onComplete: () => _goTo('onboarding'));
-      default:
+      case 'onboarding':
         return OnboardingScreen(
-          onGetStarted: () {},
-          onSignIn: () {},
+          onGetStarted: () => _goTo('signup'),
+          onSignIn: () => _goTo('signin'),
         );
+      case 'signup':
+        return SignUpScreen(
+          onBack: () => _goTo('onboarding'),
+          onCreateAccount: () {},
+        );
+      case 'signin':
+        return SignInScreen(
+          onBack: () => _goTo('onboarding'),
+          onSignIn: () {},
+          onSignUp: () => _goTo('signup'),
+        );
+      default:
+        return const SizedBox.shrink();
     }
   }
 }

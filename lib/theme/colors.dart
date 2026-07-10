@@ -14,4 +14,28 @@ class AppColors {
   static const accent = Color(0xFFff6b35);
   static const green = Color(0xFF1ddf64);
   static const destructive = Color(0xFFef4444);
+
+  // Sport colors
+  static const volleyball = Color(0xFFff6b35);
+  static const basketball = Color(0xFFf59e0b);
+  static const tennis = Color(0xFF22d35a);
+  static const badminton = Color(0xFF3b82f6);
+  static const pickleball = Color(0xFFa855f7);
+
+  static Color sportColor(String name) {
+    switch (name) {
+      case 'volleyball':
+        return volleyball;
+      case 'basketball':
+        return basketball;
+      case 'tennis':
+        return tennis;
+      case 'badminton':
+        return badminton;
+      case 'pickleball':
+        return pickleball;
+      default:
+        return mutedForeground;
+    }
+  }
 }
