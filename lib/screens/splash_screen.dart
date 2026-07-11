@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/logo_wordmark.dart';
@@ -123,11 +124,11 @@ class _SplashScreenState extends State<SplashScreen>
                       Transform.scale(
                         scale: _logoScale.value,
                         child: Container(
-                          width: 104,
-                          height: 104,
+                          width: 104.r,
+                          height: 104.r,
                           decoration: BoxDecoration(
                             color: AppColors.muted,
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(24.r),
                             border: Border.all(
                               color: AppColors.steel.withValues(alpha: 0.33),
                             ),
@@ -147,18 +148,18 @@ class _SplashScreenState extends State<SplashScreen>
                           child: const LogoMark(size: 74),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       // Title
                       Text(
                         'COURTU',
                         style: GoogleFonts.barlowCondensed(
-                          fontSize: 46,
+                          fontSize: 46.sp,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
                           letterSpacing: 2.3,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6.h),
                       // Tagline
                       SlideTransition(
                         position: _taglineSlide,
@@ -167,21 +168,21 @@ class _SplashScreenState extends State<SplashScreen>
                           child: Text(
                             'Play together. Level up.',
                             style: GoogleFonts.dmSans(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: AppColors.mutedForeground,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      SizedBox(height: 28.h),
                       // Loading bar
                       FadeTransition(
                         opacity: _barFade,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(2.r),
                           child: Container(
-                            width: 80,
-                            height: 3,
+                            width: 80.w,
+                            height: 3.h,
                             color: AppColors.dim,
                             alignment: Alignment.centerLeft,
                             child: FractionallySizedBox(
@@ -232,8 +233,8 @@ class _PingRing extends StatelessWidget {
             child: Transform.scale(
               scale: scale,
               child: Container(
-                width: 170,
-                height: 170,
+                width: 170.r,
+                height: 170.r,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(

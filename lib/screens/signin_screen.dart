@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/auth_field.dart';
@@ -32,7 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             // Header section
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+              padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -42,32 +43,32 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
-                          size: 14,
-                          color: Color(0xFF4a5a72),
+                          size: 14.sp,
+                          color: const Color(0xFF4a5a72),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4.w),
                         Text(
                           'Back',
                           style: GoogleFonts.dmSans(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: const Color(0xFF4a5a72),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   // Logo icon + welcome text
                   Row(
                     children: [
                       Container(
-                        width: 44,
-                        height: 44,
+                        width: 44.r,
+                        height: 44.r,
                         decoration: BoxDecoration(
                           color: AppColors.muted,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
                             color: AppColors.steel.withValues(alpha: 0.33),
                           ),
@@ -75,14 +76,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         alignment: Alignment.center,
                         child: const LogoMark(size: 30),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Welcome back',
                             style: GoogleFonts.barlowCondensed(
-                              fontSize: 30,
+                              fontSize: 30.sp,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
                               height: 1.0,
@@ -93,7 +94,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             TextSpan(
                               text: 'Sign in to Court',
                               style: GoogleFonts.dmSans(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 color: AppColors.mutedForeground,
                               ),
                               children: [
@@ -114,39 +115,39 @@ class _SignInScreenState extends State<SignInScreen> {
             // Scrollable form
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+                padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 32.h),
                 children: [
                   // Email label + field
                   _FieldLabel(text: 'University Email'),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
                   AuthField(
                     icon: const Icon(Icons.mail_outline),
                     hintText: 'you@university.edu',
                     keyboardType: TextInputType.emailAddress,
-                    suffix: const Icon(
+                    suffix: Icon(
                       Icons.school,
-                      size: 14,
-                      color: Color(0x406B9AB8),
+                      size: 14.sp,
+                      color: const Color(0x406B9AB8),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   // Password label + field
                   _FieldLabel(text: 'Password'),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
                   AuthField(
                     icon: const Icon(Icons.lock_outline),
-                    hintText: '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022',
+                    hintText: '••••••••',
                     obscureText: !_showPass,
                     suffix: GestureDetector(
                       onTap: () => setState(() => _showPass = !_showPass),
                       child: Icon(
                         _showPass ? Icons.visibility_off : Icons.visibility,
-                        size: 14,
+                        size: 14.sp,
                         color: const Color(0xFF4a5a72),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   // Forgot password
                   Align(
                     alignment: Alignment.centerRight,
@@ -155,49 +156,49 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Text(
                         'FORGOT PASSWORD?',
                         style: GoogleFonts.jetBrainsMono(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.steelLight,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   // Sign in button
                   _GradientButton(
                     label: 'SIGN IN',
                     onTap: widget.onSignIn,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   // OR divider
                   _OrDivider(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   // University SSO
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: () {},
                       icon: Container(
-                        width: 20,
-                        height: 20,
+                        width: 20.r,
+                        height: 20.r,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
+                        child: Text(
                           'G',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF1a73e8),
+                            color: const Color(0xFF1a73e8),
                           ),
                         ),
                       ),
                       label: Text(
                         'Continue with University SSO',
                         style: GoogleFonts.dmSans(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.foreground,
                         ),
@@ -207,20 +208,20 @@ class _SignInScreenState extends State<SignInScreen> {
                         side: BorderSide(
                           color: AppColors.steel.withValues(alpha: 0.2),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   // Sign up prompt
                   Text.rich(
                     TextSpan(
                       text: "Don't have an account? ",
                       style: GoogleFonts.dmSans(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         color: const Color(0xFF4a5a72),
                       ),
                       children: [
@@ -230,7 +231,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: Text(
                               'Sign up',
                               style: GoogleFonts.dmSans(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.steelLight,
                               ),
@@ -260,7 +261,7 @@ class _FieldLabel extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.jetBrainsMono(
-        fontSize: 11,
+        fontSize: 11.sp,
         letterSpacing: 1,
         color: const Color(0xFF4a5a72),
       ),
@@ -277,11 +278,11 @@ class _OrDivider extends StatelessWidget {
           child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
             'OR',
             style: GoogleFonts.jetBrainsMono(
-              fontSize: 10,
+              fontSize: 10.sp,
               letterSpacing: 2,
               color: const Color(0xFF4a5a72),
             ),
@@ -307,9 +308,9 @@ class _GradientButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -322,14 +323,14 @@ class _GradientButton extends StatelessWidget {
             Text(
               label,
               style: GoogleFonts.barlowCondensed(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
                 letterSpacing: 0.8,
               ),
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, size: 16, color: Colors.white),
+            SizedBox(width: 8.w),
+            Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
           ],
         ),
       ),

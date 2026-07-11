@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/logo_wordmark.dart';
@@ -59,10 +60,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           bottom: 24,
           right: 4,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: AppColors.steel.withValues(alpha: 0.27),
               ),
@@ -71,18 +72,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 8,
-                  height: 8,
+                  width: 8.r,
+                  height: 8.r,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.steelLight,
                   ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6.w),
                 Text(
                   '4 players nearby',
                   style: GoogleFonts.jetBrainsMono(
-                    fontSize: 11,
+                    fontSize: 11.sp,
                     color: AppColors.steelLight,
                   ),
                 ),
@@ -103,10 +104,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           top: 20,
           left: 4,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: AppColors.steel.withValues(alpha: 0.27),
               ),
@@ -118,7 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   'XP GAINED',
                   style: GoogleFonts.jetBrainsMono(
-                    fontSize: 9,
+                    fontSize: 9.sp,
                     letterSpacing: 1.2,
                     color: const Color(0xFF4a5a72),
                   ),
@@ -126,7 +127,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   '+240',
                   style: GoogleFonts.barlowCondensed(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w900,
                     color: AppColors.steelLight,
                   ),
@@ -154,28 +155,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const _TopBar(),
 
             // ── Slide content (takes remaining space) ──
+            // Wrapped in a scroll view that centers the content when there is
+            // room and scrolls it when the viewport is too short — so the
+            // screen never throws an overflow error on small devices.
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _TagPill(label: slide.tag),
-                    const SizedBox(height: 32),
-                    _EmojiCard(emoji: slide.emoji, floats: slide.floats),
-                    const SizedBox(height: 24),
-                    _SlideText(
-                      headline: slide.headline,
-                      body: slide.body,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _TagPill(label: slide.tag),
+                            SizedBox(height: 32.h),
+                            _EmojiCard(emoji: slide.emoji, floats: slide.floats),
+                            SizedBox(height: 24.h),
+                            _SlideText(
+                              headline: slide.headline,
+                              body: slide.body,
+                            ),
+                            SizedBox(height: 24.h),
+                            _DotIndicator(
+                              count: _slides.length,
+                              activeIndex: _step,
+                              onTap: (i) => setState(() => _step = i),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 24),
-                    _DotIndicator(
-                      count: _slides.length,
-                      activeIndex: _step,
-                      onTap: (i) => setState(() => _step = i),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
 
@@ -206,16 +221,18 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 4),
+      padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 8.h),
       child: Row(
+        // Logo pinned left, SKIP pinned right, both vertically centered.
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const LogoWordmark(size: 30),
+          const LogoWordmark(size: 24),
           // "SKIP →" label — this is just UI for now
           Text(
             'SKIP →',
             style: GoogleFonts.jetBrainsMono(
-              fontSize: 11,
+              fontSize: 11.sp,
               color: const Color(0xFF4a5a72),
             ),
           ),
@@ -238,10 +255,10 @@ class _TagPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: AppColors.steel.withValues(alpha: 0.09),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: AppColors.steel.withValues(alpha: 0.27),
         ),
@@ -251,18 +268,18 @@ class _TagPill extends StatelessWidget {
         children: [
           // Glowing dot
           Container(
-            width: 6,
-            height: 6,
+            width: 6.r,
+            height: 6.r,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.steelLight,
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: 6.w),
           Text(
             label,
             style: GoogleFonts.jetBrainsMono(
-              fontSize: 10,
+              fontSize: 10.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.steelLight,
               letterSpacing: 1,
@@ -289,18 +306,18 @@ class _EmojiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 220,
-      height: 220,
+      width: 220.r,
+      height: 220.r,
       child: Stack(
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
           // Card
           Container(
-            width: 180,
-            height: 180,
+            width: 180.r,
+            height: 180.r,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(48),
+              borderRadius: BorderRadius.circular(48.r),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -315,14 +332,14 @@ class _EmojiCard extends StatelessWidget {
               ),
             ),
             alignment: Alignment.center,
-            child: Text(emoji, style: const TextStyle(fontSize: 82)),
+            child: Text(emoji, style: TextStyle(fontSize: 82.sp)),
           ),
           // Floating badges
           ...floats.map((f) => Positioned(
-            top: f.top,
-            left: f.left,
-            right: f.right,
-            bottom: f.bottom,
+            top: f.top?.r,
+            left: f.left?.r,
+            right: f.right?.r,
+            bottom: f.bottom?.r,
             child: f.child,
           )),
         ],
@@ -366,21 +383,21 @@ class _SlideText extends StatelessWidget {
           headline,
           textAlign: TextAlign.center,
           style: GoogleFonts.barlowCondensed(
-            fontSize: 38,
+            fontSize: 38.sp,
             fontWeight: FontWeight.w900,
             color: Colors.white,
             height: 0.92,
             letterSpacing: 0.38,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
         SizedBox(
-          width: 260,
+          width: 260.w,
           child: Text(
             body,
             textAlign: TextAlign.center,
             style: GoogleFonts.dmSans(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.mutedForeground,
               height: 1.6,
             ),
@@ -419,11 +436,11 @@ class _DotIndicator extends StatelessWidget {
           onTap: () => onTap(i),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            width: isActive ? 24 : 6,
-            height: 6,
-            margin: const EdgeInsets.symmetric(horizontal: 4),
+            width: isActive ? 24.w : 6.w,
+            height: 6.h,
+            margin: EdgeInsets.symmetric(horizontal: 4.w),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(3.r),
               color: isActive ? AppColors.steel : AppColors.dim,
             ),
           ),
@@ -455,7 +472,7 @@ class _BottomButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      padding: EdgeInsets.fromLTRB(24.w, 8.h, 24.w, 24.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -463,19 +480,19 @@ class _BottomButtons extends StatelessWidget {
             _GradientButton(label: 'NEXT', onTap: onNext)
           else ...[
             _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
-            const SizedBox(height: 10),
+            SizedBox(height: 8.h),
             TextButton(
               onPressed: onSignIn,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24.w,
+                  vertical: 12.h,
                 ),
               ),
               child: Text(
                 'ALREADY HAVE AN ACCOUNT',
                 style: GoogleFonts.barlowCondensed(
-                  fontSize: 13,
+                  fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.mutedForeground,
                   letterSpacing: 0.5,
@@ -501,9 +518,9 @@ class _GradientButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -516,14 +533,14 @@ class _GradientButton extends StatelessWidget {
             Text(
               label,
               style: GoogleFonts.barlowCondensed(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
                 letterSpacing: 0.8,
               ),
             ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, size: 16, color: Colors.white),
+            SizedBox(width: 8.w),
+            Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
           ],
         ),
       ),
@@ -559,10 +576,10 @@ class _FloatBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: AppColors.steel.withValues(alpha: 0.13),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: AppColors.steel.withValues(alpha: 0.33),
         ),
@@ -570,7 +587,7 @@ class _FloatBadge extends StatelessWidget {
       child: Text(
         text,
         style: GoogleFonts.jetBrainsMono(
-          fontSize: 10,
+          fontSize: 10.sp,
           fontWeight: FontWeight.bold,
           color: AppColors.steelLight,
         ),

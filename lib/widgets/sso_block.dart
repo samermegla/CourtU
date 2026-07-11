@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 
@@ -17,9 +18,9 @@ class SSOBlock extends StatelessWidget {
     return Column(
       children: [
         _googleButton(),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
         _universityButton(),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         _divider(),
       ],
     );
@@ -34,20 +35,20 @@ class SSOBlock extends StatelessWidget {
           backgroundColor: Colors.white,
           foregroundColor: const Color(0xFF111111),
           side: BorderSide.none,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: EdgeInsets.symmetric(vertical: 14.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _googleLogo(),
-            const SizedBox(width: 10),
+            SizedBox(width: 10.w),
             Text(
               'Continue with Google',
               style: GoogleFonts.dmSans(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -62,11 +63,11 @@ class SSOBlock extends StatelessWidget {
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: onUniversitySSO,
-        icon: const Icon(Icons.school, size: 15, color: AppColors.mutedForeground),
+        icon: Icon(Icons.school, size: 15.sp, color: AppColors.mutedForeground),
         label: Text(
           'University SSO',
           style: GoogleFonts.dmSans(
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             color: AppColors.mutedForeground,
           ),
@@ -74,9 +75,9 @@ class SSOBlock extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.muted,
           side: BorderSide(color: AppColors.steel.withValues(alpha: 0.2)),
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: EdgeInsets.symmetric(vertical: 14.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
       ),
@@ -90,11 +91,11 @@ class SSOBlock extends StatelessWidget {
           child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
             'or email',
             style: GoogleFonts.jetBrainsMono(
-              fontSize: 10,
+              fontSize: 10.sp,
               letterSpacing: 2,
               color: const Color(0xFF4a5a72),
             ),
@@ -109,8 +110,8 @@ class SSOBlock extends StatelessWidget {
 
   Widget _googleLogo() {
     return SizedBox(
-      width: 17,
-      height: 17,
+      width: 17.r,
+      height: 17.r,
       child: CustomPaint(painter: _GoogleLogoPainter()),
     );
   }
