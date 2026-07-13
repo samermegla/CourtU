@@ -23,6 +23,40 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<Offset> _taglineSlide;
   late Animation<double> _barFade;
   late Animation<double> _barWidth;
+  late Animation<double> _ambientFade;
+
+  // Court pins scattered inside the ping radius, around the logo.
+  // dx/dy are offsets from the center of the screen.
+  static const _pins = [
+    _PinData(
+      emoji: '🏐',
+      label: 'Rec Main',
+      color: AppColors.statusHot,
+      dx: -82,
+      dy: -118,
+    ),
+    _PinData(
+      emoji: '🏀',
+      label: 'North AC',
+      color: AppColors.statusActive,
+      dx: 84,
+      dy: -132,
+    ),
+    _PinData(
+      emoji: '🎾',
+      label: 'Tennis Pav',
+      color: AppColors.statusQuiet,
+      dx: -86,
+      dy: -30,
+    ),
+    _PinData(
+      emoji: '🏸',
+      label: 'East Arena',
+      color: AppColors.statusEmpty,
+      dx: 84,
+      dy: -48,
+    ),
+  ];
 
   @override
   void initState() {
@@ -71,6 +105,14 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
+    // Map backdrop + court pins ease in just behind the logo.
+    _ambientFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: const Interval(0.15, 0.45, curve: Curves.easeOut),
+      ),
+    );
+
     _pingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2500),
@@ -94,23 +136,31 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0, -0.3),
-            radius: 1.2,
-            colors: [
-              Color(0x284B6D8A),
-              Color(0xFF080d18),
-            ],
-            stops: [0.0, 0.65],
-          ),
-        ),
+        // Flat background — the only glow on this screen is the logo's.
+        color: AppColors.background,
         child: Stack(
           children: [
+            // Campus map backdrop — grid + roads, well behind everything
+            Positioned.fill(
+              child: FadeTransition(
+                opacity: _ambientFade,
+                child: CustomPaint(painter: _MapBackdropPainter()),
+              ),
+            ),
             // Ping rings
             ...List.generate(3, (i) => _PingRing(
               animation: _pingController,
               delay: i * 0.55,
+            )),
+            // Court pins sitting inside the ping radius
+            ..._pins.map((pin) => Center(
+              child: Transform.translate(
+                offset: Offset(pin.dx.r, pin.dy.r),
+                child: FadeTransition(
+                  opacity: _ambientFade,
+                  child: _CourtPin(pin: pin),
+                ),
+              ),
             )),
             // Main content
             Center(
@@ -208,6 +258,172 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
   }
+}
+
+// ─────────────────────────────────────────────
+// COURT PIN
+// ─────────────────────────────────────────────
+// A sport emoji in a colored circle with a short
+// name underneath — the same pin the campus map
+// uses, scattered here as splash set dressing.
+
+class _PinData {
+  final String emoji;
+  final String label;
+  final Color color;
+  final double dx;
+  final double dy;
+
+  const _PinData({
+    required this.emoji,
+    required this.label,
+    required this.color,
+    required this.dx,
+    required this.dy,
+  });
+}
+
+class _CourtPin extends StatelessWidget {
+  final _PinData pin;
+
+  const _CourtPin({required this.pin});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 36.r,
+          height: 36.r,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: pin.color.withValues(alpha: 0.10),
+            border: Border.all(
+              color: pin.color.withValues(alpha: 0.45),
+              width: 1.5,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Text(pin.emoji, style: TextStyle(fontSize: 16.sp)),
+        ),
+        SizedBox(height: 4.h),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          decoration: BoxDecoration(
+            color: AppColors.card.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(4.r),
+            border: Border.all(color: pin.color.withValues(alpha: 0.2)),
+          ),
+          child: Text(
+            pin.label,
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: 9.sp,
+              fontWeight: FontWeight.w600,
+              color: pin.color.withValues(alpha: 0.7),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// MAP BACKDROP
+// ─────────────────────────────────────────────
+// Faint campus grid, roads and building outlines
+// behind the rings.
+
+class _MapBackdropPainter extends CustomPainter {
+  /// Campus buildings: (dx, dy, width, height), where dx/dy offset the
+  /// building's center from the center of the screen — the same coordinate
+  /// space the pins use, so a pin sits squarely on its building.
+  ///
+  /// The first four are the ones the pins stand on; their dy is 10 above the
+  /// pin's own dy because a pin's circle sits 10 above its column center
+  /// (the short-name label hangs below it).
+  static const _buildings = [
+    (-82.0, -128.0, 72.0, 46.0), // Rec Main
+    (84.0, -142.0, 76.0, 48.0), // North AC
+    (-86.0, -40.0, 74.0, 46.0), // Tennis Pav
+    (84.0, -58.0, 72.0, 46.0), // East Arena
+    // Unoccupied buildings, for campus texture
+    (0.0, -196.0, 62.0, 34.0),
+    (-138.0, 62.0, 54.0, 34.0),
+    (132.0, 74.0, 58.0, 36.0),
+    (-10.0, 150.0, 84.0, 40.0),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final grid = Paint()
+      ..color = AppColors.steel.withValues(alpha: 0.04)
+      ..strokeWidth = 0.5
+      ..style = PaintingStyle.stroke;
+
+    const step = 40.0;
+    for (double x = 0; x <= size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), grid);
+    }
+    for (double y = 0; y <= size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
+    }
+
+    final road = Paint()..color = AppColors.dim.withValues(alpha: 0.2);
+
+    road.strokeWidth = 8;
+    canvas.drawLine(
+      Offset(0, size.height / 2),
+      Offset(size.width, size.height / 2),
+      road,
+    );
+    canvas.drawLine(
+      Offset(size.width / 2, 0),
+      Offset(size.width / 2, size.height),
+      road,
+    );
+
+    road.strokeWidth = 4;
+    canvas.drawLine(
+      Offset(size.width * 0.2, 0),
+      Offset(size.width * 0.8, size.height),
+      road,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.8, 0),
+      Offset(size.width * 0.2, size.height),
+      road,
+    );
+
+    // Building outlines, over the roads
+    final buildingFill = Paint()
+      ..color = AppColors.dim.withValues(alpha: 0.22)
+      ..style = PaintingStyle.fill;
+
+    final buildingStroke = Paint()
+      ..color = AppColors.steel.withValues(alpha: 0.16)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    final center = Offset(size.width / 2, size.height / 2);
+
+    for (final (dx, dy, w, h) in _buildings) {
+      final rect = RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: center + Offset(dx.r, dy.r),
+          width: w.r,
+          height: h.r,
+        ),
+        Radius.circular(3.r),
+      );
+      canvas.drawRRect(rect, buildingFill);
+      canvas.drawRRect(rect, buildingStroke);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_MapBackdropPainter oldDelegate) => false;
 }
 
 class _PingRing extends StatelessWidget {

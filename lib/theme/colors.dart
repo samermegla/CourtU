@@ -15,6 +15,12 @@ class AppColors {
   static const green = Color(0xFF1ddf64);
   static const destructive = Color(0xFFef4444);
 
+  // Court status colors
+  static const statusHot = Color(0xFFff6b35);
+  static const statusActive = Color(0xFF1ddf64);
+  static const statusQuiet = Color(0xFFf59e0b);
+  static const statusEmpty = Color(0xFF6b7fa3);
+
   // Sport colors
   static const volleyball = Color(0xFFff6b35);
   static const basketball = Color(0xFFf59e0b);
