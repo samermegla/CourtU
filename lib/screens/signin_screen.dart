@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/auth_field.dart';
 import '../widgets/logo_wordmark.dart';
+import '../services/auth_service.dart';
+import '../utils/validators.dart';
 
 class SignInScreen extends StatefulWidget {
   final VoidCallback onBack;
@@ -22,7 +24,54 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final _authService = AuthService();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _showPass = false;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSignIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showError('Please enter your email and password.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      _showError('Please enter a valid email address.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signIn(email, password);
+      if (user != null && mounted) {
+        widget.onSignIn();
+      }
+    } catch (e) {
+      if (mounted) _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +167,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 32.h),
                 children: [
                   // Email label + field
-                  _FieldLabel(text: 'University Email'),
+                  _FieldLabel(text: 'Email'),
                   SizedBox(height: 6.h),
                   AuthField(
+                    controller: _emailController,
                     icon: const Icon(Icons.mail_outline),
-                    hintText: 'you@university.edu',
+                    hintText: 'Email',
                     keyboardType: TextInputType.emailAddress,
                     suffix: Icon(
                       Icons.school,
@@ -135,6 +185,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   _FieldLabel(text: 'Password'),
                   SizedBox(height: 6.h),
                   AuthField(
+                    controller: _passwordController,
                     icon: const Icon(Icons.lock_outline),
                     hintText: '••••••••',
                     obscureText: !_showPass,
@@ -166,8 +217,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: 24.h),
                   // Sign in button
                   _GradientButton(
-                    label: 'SIGN IN',
-                    onTap: widget.onSignIn,
+                    label: _isLoading ? 'SIGNING IN...' : 'SIGN IN',
+                    onTap: _isLoading ? null : _handleSignIn,
+                    loading: _isLoading,
                   ),
                   SizedBox(height: 16.h),
                   // OR divider
@@ -298,9 +350,14 @@ class _OrDivider extends StatelessWidget {
 
 class _GradientButton extends StatelessWidget {
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool loading;
 
-  const _GradientButton({required this.label, required this.onTap});
+  const _GradientButton({
+    required this.label,
+    required this.onTap,
+    this.loading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -311,26 +368,40 @@ class _GradientButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [AppColors.steel, AppColors.steelLight],
+            colors: [
+              AppColors.steel.withValues(alpha: loading ? 0.6 : 1),
+              AppColors.steelLight.withValues(alpha: loading ? 0.6 : 1),
+            ],
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              label,
-              style: GoogleFonts.barlowCondensed(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 0.8,
+            if (loading)
+              SizedBox(
+                width: 16.r,
+                height: 16.r,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                ),
+              )
+            else ...[
+              Text(
+                label,
+                style: GoogleFonts.barlowCondensed(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: 0.8,
+                ),
               ),
-            ),
-            SizedBox(width: 8.w),
-            Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
+              SizedBox(width: 8.w),
+              Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
+            ],
           ],
         ),
       ),

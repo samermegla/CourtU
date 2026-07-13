@@ -9,6 +9,9 @@ class AuthService {
         email: email,
         password: password,
       );
+      // Prove ownership of the inbox; the AuthGate holds the account at the
+      // verification screen until the link is clicked.
+      await credential.user?.sendEmailVerification();
       return credential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -42,5 +45,30 @@ class AuthService {
 
   Future<void> signOut() => _auth.signOut();
 
+  User? get currentUser => _auth.currentUser;
+
+  Future<void> sendVerificationEmail() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'too-many-requests') {
+        throw 'Too many attempts. Please wait a minute before resending.';
+      }
+      throw e.message ?? 'Could not send verification email.';
+    }
+  }
+
+  /// Fetches the latest account state from the server. `emailVerified` is
+  /// cached on-device, so clicking the link in the inbox is invisible to the
+  /// app until a reload like this one runs.
+  Future<bool> reloadAndCheckVerified() async {
+    await _auth.currentUser?.reload();
+    return _auth.currentUser?.emailVerified ?? false;
+  }
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  /// Like [authStateChanges], but also emits on profile refreshes (reload,
+  /// display-name updates), so listeners notice email verification.
+  Stream<User?> get userChanges => _auth.userChanges();
 }

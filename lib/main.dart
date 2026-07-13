@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/signin_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/verify_email_screen.dart';
+import 'services/auth_service.dart';
+import 'theme/colors.dart';
 
 
 void main() async {
@@ -55,8 +60,43 @@ class CourtUApp extends StatelessWidget {
               child: child!,
             );
           },
-          home: const _AppFlow(),
+          home: AuthGate(),
         );
+      },
+    );
+  }
+}
+
+/// Derives the top-level UI from Firebase's auth state instead of navigating
+/// imperatively: signed out shows the onboarding flow, signed in but
+/// unverified is held at the verification screen, verified lands on home.
+class AuthGate extends StatelessWidget {
+  AuthGate({super.key});
+
+  // userChanges (not authStateChanges) so the gate also rebuilds when a
+  // reload() picks up a freshly verified email.
+  final Stream<User?> _userChanges = AuthService().userChanges;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: _userChanges,
+      builder: (context, snapshot) {
+        // Firebase is still restoring the persisted session from disk.
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            backgroundColor: AppColors.background,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final user = snapshot.data;
+        if (user == null) {
+          return const _AppFlow();
+        }
+        if (!user.emailVerified) {
+          return const VerifyEmailScreen();
+        }
+        return const HomeScreen();
       },
     );
   }

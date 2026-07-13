@@ -6,22 +6,23 @@ import '../widgets/logo_wordmark.dart';
 import '../widgets/auth_field.dart';
 import '../widgets/sso_block.dart';
 import '../services/auth_service.dart';
+import '../utils/validators.dart';
 
-enum _Sport { volleyball, basketball, tennis, badminton, pickleball }
+enum _Sport { volleyball, basketball, tennis, pingpong, pickleball }
 
 const _sportEmoji = {
   _Sport.volleyball: '🏐',
   _Sport.basketball: '🏀',
   _Sport.tennis: '🎾',
-  _Sport.badminton: '🏸',
-  _Sport.pickleball: '🏓',
+  _Sport.pingpong: '🏓',
+  _Sport.pickleball: '🟡',
 };
 
 const _sportLabel = {
   _Sport.volleyball: 'VOLL',
   _Sport.basketball: 'BASK',
   _Sport.tennis: 'TENN',
-  _Sport.badminton: 'BADM',
+  _Sport.pingpong: 'PING',
   _Sport.pickleball: 'PICK',
 };
 
@@ -65,6 +66,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       _showError('Please enter an email and password.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      _showError('Please enter a valid email address.');
       return;
     }
 
@@ -186,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   AuthField(
                     controller: _emailController,
                     icon: const Icon(Icons.school_outlined),
-                    hintText: 'uni@university.edu',
+                    hintText: 'Email',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 10.h),
