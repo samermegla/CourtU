@@ -33,6 +33,9 @@ class AuthService {
       } else if (e.code == 'wrong-password') {
         throw 'Wrong password provided.';
       }
+        else if (e.code == 'invalid-credential') {
+          throw 'Incorrect email or password.';
+        }
       throw e.message ?? 'Sign in failed.';
     }
   }
