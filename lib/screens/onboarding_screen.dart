@@ -330,6 +330,13 @@ class _EmojiCard extends StatelessWidget {
                 color: AppColors.steel.withValues(alpha: 0.27),
                 width: 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.steel.withValues(alpha: 0.22),
+                  blurRadius: 70.r,
+                  spreadRadius: 8.r,
+                ),
+              ],
             ),
             alignment: Alignment.center,
             child: Text(emoji, style: TextStyle(fontSize: 82.sp)),
@@ -526,6 +533,14 @@ class _GradientButton extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [AppColors.steel, AppColors.steelLight],
           ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.steelLight.withValues(alpha: 0.28),
+              blurRadius: 40.r,
+              spreadRadius: 4.r,
+              offset: Offset(0, 4.h),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
