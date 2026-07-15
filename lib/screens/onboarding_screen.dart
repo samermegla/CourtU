@@ -40,12 +40,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _FloatData(
           top: 24,
           right: 16,
-          child: _FloatBadge(text: '🔥 PACKED'),
+          child: _FloatBadge(text: '🔥 PACKED!!'),
         ),
         _FloatData(
           bottom: 32,
           left: 8,
-          child: _FloatBadge(text: '6/12'),
+          child: _FloatBadge(text: '22/24 PLAYERS'),
         ),
       ],
     ),
@@ -484,7 +484,7 @@ class _BottomButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            _GradientButton(label: 'NEXT', onTap: onNext)
+            _GradientButton(label: "LET'S GO", onTap: onNext)
           else ...[
             _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
             SizedBox(height: 8.h),
