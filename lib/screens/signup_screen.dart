@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _handleCreateAccount() async {
     final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       _showError('Please enter an email and password.');

@@ -332,9 +332,9 @@ class _EmojiCard extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.steel.withValues(alpha: 0.22),
-                  blurRadius: 70.r,
-                  spreadRadius: 8.r,
+                  color: AppColors.steel.withValues(alpha: 0.45),
+                  blurRadius: 100.r,
+                  spreadRadius: 16.r,
                 ),
               ],
             ),
@@ -535,9 +535,9 @@ class _GradientButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.steelLight.withValues(alpha: 0.28),
-              blurRadius: 40.r,
-              spreadRadius: 4.r,
+              color: AppColors.steelLight.withValues(alpha: 0.5),
+              blurRadius: 60.r,
+              spreadRadius: 8.r,
               offset: Offset(0, 4.h),
             ),
           ],

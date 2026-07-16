@@ -31,15 +31,42 @@ class AuthService {
       );
       return credential.user;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        throw 'Wrong password provided.';
-      }
-        else if (e.code == 'invalid-credential') {
+      switch (e.code) {
+        // One identical message for every "those credentials are wrong"
+        // outcome. Separating "no such account" from "wrong password" would
+        // reveal which addresses are registered — see [sendPasswordReset].
+        case 'user-not-found':
+        case 'wrong-password':
+        case 'invalid-credential':
+        case 'invalid-email':
           throw 'Incorrect email or password.';
-        }
+        case 'user-disabled':
+          throw 'This account has been disabled.';
+        case 'too-many-requests':
+          throw 'Too many attempts. Please wait a minute before trying again.';
+      }
       throw e.message ?? 'Sign in failed.';
+    }
+  }
+
+  /// Emails a password-reset link.
+  ///
+  /// `user-not-found` is deliberately swallowed rather than surfaced: telling
+  /// the caller an address has no account turns this screen into an oracle for
+  /// probing which emails are registered. Callers show the same confirmation
+  /// either way.
+  Future<void> sendPasswordReset(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') return;
+      if (e.code == 'invalid-email') {
+        throw 'Please enter a valid email address.';
+      }
+      if (e.code == 'too-many-requests') {
+        throw 'Too many attempts. Please wait a minute before trying again.';
+      }
+      throw e.message ?? 'Could not send the reset email.';
     }
   }
 
