@@ -1,7 +1,54 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+/// The OAuth "web" client (type 3) from google-services.json. Android needs it
+/// to mint an ID token Firebase will accept; without it `idToken` comes back
+/// null and the sign-in silently fails. Public by design — an OAuth client ID
+/// is an identifier, not a secret.
+const _serverClientId =
+    '725898610839-b08uf39rqvvmil9i75or8a5s8fdaeua3.apps.googleusercontent.com';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// `initialize` must run once before any other GoogleSignIn call, and is not
+  /// idempotent-friendly enough to call per tap.
+  static Future<void>? _googleInit;
+  static Future<void> _ensureGoogleReady() =>
+      _googleInit ??= GoogleSignIn.instance.initialize(
+        serverClientId: _serverClientId,
+      );
+
+  /// Signs in with Google and exchanges the result for a Firebase session.
+  ///
+  /// Returns null when the user backs out of the Google sheet — that's a
+  /// cancellation, not a failure, and callers should stay silent rather than
+  /// show an error.
+  Future<User?> signInWithGoogle() async {
+    try {
+      await _ensureGoogleReady();
+
+      final account = await GoogleSignIn.instance.authenticate();
+      final idToken = account.authentication.idToken;
+      if (idToken == null) {
+        throw 'Google did not return an ID token. Check that the SHA-1 '
+            'fingerprint is registered for this build.';
+      }
+
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      final result = await _auth.signInWithCredential(credential);
+      return result.user;
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) return null;
+      throw 'Google sign-in failed: ${e.description ?? e.code.name}';
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        throw 'An account already exists for that email. Sign in with your '
+            'password instead.';
+      }
+      throw e.message ?? 'Google sign-in failed.';
+    }
+  }
 
   Future<User?> signUp(String email, String password) async {
     try {

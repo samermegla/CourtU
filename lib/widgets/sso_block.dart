@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 
 class SSOBlock extends StatelessWidget {
-  final VoidCallback onGoogleSignIn;
-  final VoidCallback onUniversitySSO;
+  /// Null disables the button — used while a sign-in is already in flight.
+  final VoidCallback? onGoogleSignIn;
+  final VoidCallback? onUniversitySSO;
 
   const SSOBlock({
     super.key,
