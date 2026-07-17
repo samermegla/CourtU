@@ -31,6 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool _showPass = false;
   bool _isLoading = false;
+  bool _isSendingReset = false;
 
   @override
   void dispose() {
@@ -67,9 +68,46 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  /// Reuses whatever is already typed in the email field rather than opening a
+  /// dialog, so the common case (wrong password, email already filled in) is a
+  /// single tap.
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showError('Enter your email address above, then tap Forgot Password.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      _showError('"$email" doesn\'t look like a valid email address.');
+      return;
+    }
+
+    setState(() => _isSendingReset = true);
+
+    try {
+      await _authService.sendPasswordReset(email);
+      if (mounted) {
+        // Worded as a conditional on purpose — see sendPasswordReset.
+        _showInfo('If an account exists for $email, a reset link is on its way.');
+      }
+    } catch (e) {
+      if (mounted) _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isSendingReset = false);
+    }
+  }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
+    );
+  }
+
+  void _showInfo(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: AppColors.steel),
     );
   }
 
@@ -203,13 +241,17 @@ class _SignInScreenState extends State<SignInScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: _isSendingReset ? null : _handleForgotPassword,
                       child: Text(
-                        'FORGOT PASSWORD?',
+                        _isSendingReset
+                            ? 'SENDING...'
+                            : 'FORGOT PASSWORD?',
                         style: GoogleFonts.jetBrainsMono(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.steelLight,
+                          color: _isSendingReset
+                              ? AppColors.mutedForeground
+                              : AppColors.steelLight,
                         ),
                       ),
                     ),

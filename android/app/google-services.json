@@ -12,7 +12,12 @@
           "package_name": "com.example.courtu"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "725898610839-b08uf39rqvvmil9i75or8a5s8fdaeua3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCNI0xuE3xcesPmvYe7IbEpVmeu_jtF-NI"
@@ -20,7 +25,63 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725898610839-b08uf39rqvvmil9i75or8a5s8fdaeua3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "725898610839-6vihjr0sh6ir1phco2e8r7509hu5fbqg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.samermegla.courtu"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725898610839:android:848d58a43379d8595601d2",
+        "android_client_info": {
+          "package_name": "dev.samermegla.courtu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725898610839-m2d6tdfcslara656cmq8dgp5s4vmmc4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.samermegla.courtu",
+            "certificate_hash": "5204ff5de7eaffd398714b160f3a4b0932e2f28a"
+          }
+        },
+        {
+          "client_id": "725898610839-b08uf39rqvvmil9i75or8a5s8fdaeua3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNI0xuE3xcesPmvYe7IbEpVmeu_jtF-NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725898610839-b08uf39rqvvmil9i75or8a5s8fdaeua3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "725898610839-6vihjr0sh6ir1phco2e8r7509hu5fbqg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.samermegla.courtu"
+              }
+            }
+          ]
         }
       }
     }

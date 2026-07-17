@@ -52,26 +52,30 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCNI0xuE3xcesPmvYe7IbEpVmeu_jtF-NI',
-    appId: '1:725898610839:android:5320f01778a94e185601d2',
+    appId: '1:725898610839:android:848d58a43379d8595601d2',
     messagingSenderId: '725898610839',
     projectId: 'courtu-44f73',
     storageBucket: 'courtu-44f73.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAi8w-JeyqmVgBEkXk6YYiz2intI_ZQUwU',
-    appId: '1:725898610839:ios:28c07d61088e3bf55601d2',
+    appId: '1:725898610839:ios:3a51595804ef4fde5601d2',
     messagingSenderId: '725898610839',
     projectId: 'courtu-44f73',
     storageBucket: 'courtu-44f73.firebasestorage.app',
-    iosBundleId: 'com.example.courtu',
+    androidClientId: '725898610839-m2d6tdfcslara656cmq8dgp5s4vmmc4a.apps.googleusercontent.com',
+    iosClientId: '725898610839-6vihjr0sh6ir1phco2e8r7509hu5fbqg.apps.googleusercontent.com',
+    iosBundleId: 'dev.samermegla.courtu',
   );
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAi8w-JeyqmVgBEkXk6YYiz2intI_ZQUwU',
-    appId: '1:725898610839:ios:28c07d61088e3bf55601d2',
+    appId: '1:725898610839:ios:3a51595804ef4fde5601d2',
     messagingSenderId: '725898610839',
     projectId: 'courtu-44f73',
     storageBucket: 'courtu-44f73.firebasestorage.app',
-    iosBundleId: 'com.example.courtu',
+    androidClientId: '725898610839-m2d6tdfcslara656cmq8dgp5s4vmmc4a.apps.googleusercontent.com',
+    iosClientId: '725898610839-6vihjr0sh6ir1phco2e8r7509hu5fbqg.apps.googleusercontent.com',
+    iosBundleId: 'dev.samermegla.courtu',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

@@ -49,6 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _showPass = false;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   _Sport? _selectedSport;
   bool _locationConsent = true;
 
@@ -62,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _handleCreateAccount() async {
     final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       _showError('Please enter an email and password.');
@@ -85,6 +86,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (mounted) _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  /// Google accounts arrive already email-verified, so a successful sign-in
+  /// drops straight to home — the AuthGate does that routing off the auth
+  /// stream, which is why there's no navigation here.
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+    try {
+      // null means the user dismissed the Google sheet; say nothing.
+      await _authService.signInWithGoogle();
+    } catch (e) {
+      if (mounted) _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
     }
   }
 
@@ -177,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   // SSO
                   SSOBlock(
-                    onGoogleSignIn: () {},
+                    onGoogleSignIn: _isGoogleLoading ? null : _handleGoogleSignIn,
                     onUniversitySSO: () {},
                   ),
                   SizedBox(height: 16.h),
