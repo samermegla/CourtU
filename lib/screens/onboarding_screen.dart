@@ -33,17 +33,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _SlideData(
       tag: 'REAL-TIME MAP',
       emoji: '🗺️',
-      headline: 'Your Campus,\nAlive in\nReal Time',
+      emojiFontSize: 104.55,
+      headline: 'YOUR CAMPUS\nIN REAL TIME.',
       body:
-          'See exactly which courts are buzzing right now. Every rec center, gym, and outdoor court — live.',
+          'See which courts are buzzing now. Every rec, gym, and outdoor court - live.',
       floats: [
         _FloatData(
           top: 24,
-          right: 16,
+          right: 11,
           child: _FloatBadge(text: '🔥 PACKED!!'),
         ),
         _FloatData(
-          bottom: 32,
+          bottom: 25,
           left: 8,
           child: _FloatBadge(text: '22/24 PLAYERS'),
         ),
@@ -52,13 +53,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _SlideData(
       tag: 'CONNECT',
       emoji: '🏐',
-      headline: 'Show Up,\nPlay\nTogether',
+      headline: 'SHOW UP\nPLAY HARD\nTOGETHER.',
       body:
-          'Tap into a court to let others know you\'re there. Find people to play with in seconds, not hours.',
+          'Tap into a court to let others know you\'re there. Rally up players in seconds, not hours.',
       floats: [
         _FloatData(
-          bottom: 24,
-          right: 4,
+          bottom: 30,
+          right: 0,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             decoration: BoxDecoration(
@@ -76,14 +77,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 8.r,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.steelLight,
+                    color: Colors.green,
                   ),
                 ),
                 SizedBox(width: 6.w),
                 Text(
-                  '4 players nearby',
+                  '11 PLAYERS NEARBY',
                   style: GoogleFonts.jetBrainsMono(
-                    fontSize: 11.sp,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
                     color: AppColors.steelLight,
                   ),
                 ),
@@ -94,15 +97,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
     ),
     _SlideData(
-      tag: 'LEVEL UP',
-      emoji: '⚡',
-      headline: 'Level Up\nEvery\nSession',
+      tag: 'CUSTOMIZE',
+      emoji: '🦕',
+      headline: 'CUSTOMIZE\nAND MAKE\nFRIENDS.',
       body:
-          'Earn XP, collect achievements, and build your sports identity. Your grind, tracked.',
+          'Personalize your sports identity.\nInvite your friends to join!',
       floats: [
         _FloatData(
           top: 20,
-          left: 4,
+          right: 12,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
             decoration: BoxDecoration(
@@ -117,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'XP GAINED',
+                  'CHAT:',
                   style: GoogleFonts.jetBrainsMono(
                     fontSize: 9.sp,
                     letterSpacing: 1.2,
@@ -125,7 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 Text(
-                  '+240',
+                  "I'M GOING!",
                   style: GoogleFonts.barlowCondensed(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w900,
@@ -152,7 +155,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(
           children: [
             // ── Top bar (always visible) ──
-            const _TopBar(),
+            _TopBar(onSkip: widget.onGetStarted),
 
             // ── Slide content (takes remaining space) ──
             // Wrapped in a scroll view that centers the content when there is
@@ -169,11 +172,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: IntrinsicHeight(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _TagPill(label: slide.tag),
+                            Transform.translate(
+                              offset: Offset(0, 8.h),
+                              child: _TagPill(label: slide.tag),
+                            ),
                             SizedBox(height: 32.h),
-                            _EmojiCard(emoji: slide.emoji, floats: slide.floats),
+                            _EmojiCard(
+                              emoji: slide.emoji,
+                              emojiFontSize: slide.emojiFontSize,
+                              floats: slide.floats,
+                            ),
                             SizedBox(height: 24.h),
                             _SlideText(
                               headline: slide.headline,
@@ -185,6 +196,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               activeIndex: _step,
                               onTap: (i) => setState(() => _step = i),
                             ),
+                            // Extra breathing room before the buttons. Lives
+                            // in the scroll-safe area (scrolls instead of
+                            // overflowing on short screens) rather than in
+                            // _BottomButtons' fixed padding.
+                            SizedBox(height: 42.h),
                           ],
                         ),
                       ),
@@ -213,10 +229,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 // ─────────────────────────────────────────────
 // Shows the LogoWordmark on the left and a
 // "SKIP →" button on the right. The skip button
-// does whatever onGetStarted does (jump to signup).
+// calls onSkip (jumps straight to signup).
 
 class _TopBar extends StatelessWidget {
-  const _TopBar();
+  final VoidCallback onSkip;
+
+  const _TopBar({required this.onSkip});
 
   @override
   Widget build(BuildContext context) {
@@ -228,12 +246,14 @@ class _TopBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const LogoWordmark(size: 24),
-          // "SKIP →" label — this is just UI for now
-          Text(
-            'SKIP →',
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: 11.sp,
-              color: const Color(0xFF4a5a72),
+          GestureDetector(
+            onTap: onSkip,
+            child: Text(
+              'SKIP →',
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 11.sp,
+                color: const Color(0xFF4a5a72),
+              ),
             ),
           ),
         ],
@@ -270,9 +290,15 @@ class _TagPill extends StatelessWidget {
           Container(
             width: 6.r,
             height: 6.r,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.steelLight,
+              color: label == 'REAL-TIME MAP'
+                  ? Colors.red
+                  : label == 'CONNECT'
+                      ? Colors.green
+                      : label == 'CUSTOMIZE'
+                          ? Colors.blue
+                          : AppColors.steelLight,
             ),
           ),
           SizedBox(width: 6.w),
@@ -281,7 +307,7 @@ class _TagPill extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.steelLight,
+              color: const Color(0xFFF5F5F0),
               letterSpacing: 1,
             ),
           ),
@@ -299,9 +325,14 @@ class _TagPill extends StatelessWidget {
 
 class _EmojiCard extends StatelessWidget {
   final String emoji;
+  final double emojiFontSize;
   final List<_FloatData> floats;
 
-  const _EmojiCard({required this.emoji, this.floats = const []});
+  const _EmojiCard({
+    required this.emoji,
+    this.emojiFontSize = 82,
+    this.floats = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +370,7 @@ class _EmojiCard extends StatelessWidget {
               ],
             ),
             alignment: Alignment.center,
-            child: Text(emoji, style: TextStyle(fontSize: 82.sp)),
+            child: Text(emoji, style: TextStyle(fontSize: emojiFontSize.sp)),
           ),
           // Floating badges
           ...floats.map((f) => Positioned(
@@ -485,10 +516,15 @@ class _BottomButtons extends StatelessWidget {
         children: [
           if (!isLastStep)
             _GradientButton(label: "LET'S GO", onTap: onNext)
-          else ...[
+          else
             _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
-            SizedBox(height: 8.h),
-            TextButton(
+          SizedBox(height: 20.h),
+          Visibility(
+            visible: isLastStep,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            child: TextButton(
               onPressed: onSignIn,
               style: TextButton.styleFrom(
                 padding: EdgeInsets.symmetric(
@@ -506,7 +542,7 @@ class _BottomButtons extends StatelessWidget {
                 ),
               ),
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -570,6 +606,7 @@ class _GradientButton extends StatelessWidget {
 class _SlideData {
   final String tag;
   final String emoji;
+  final double emojiFontSize;
   final String headline;
   final String body;
   final List<_FloatData> floats;
@@ -577,6 +614,7 @@ class _SlideData {
   const _SlideData({
     required this.tag,
     required this.emoji,
+    this.emojiFontSize = 82,
     required this.headline,
     required this.body,
     this.floats = const [],
