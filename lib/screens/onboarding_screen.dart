@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
+import '../widgets/gradient_button.dart';
 import '../widgets/logo_wordmark.dart';
+import '../widgets/step_dot_indicator.dart';
 
 // ─────────────────────────────────────────────
 // 1. SCREEN SHELL
@@ -53,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _SlideData(
       tag: 'CONNECT',
       emoji: '🏐',
-      headline: 'SHOW UP\nPLAY HARD\nTOGETHER.',
+      headline: 'SHOW UP\nTOGETHER.',
       body:
           'Tap into a court to let others know you\'re there. Rally up players in seconds, not hours.',
       floats: [
@@ -191,7 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               body: slide.body,
                             ),
                             SizedBox(height: 24.h),
-                            _DotIndicator(
+                            StepDotIndicator(
                               count: _slides.length,
                               activeIndex: _step,
                               onTap: (i) => setState(() => _step = i),
@@ -364,8 +366,8 @@ class _EmojiCard extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: AppColors.steel.withValues(alpha: 0.45),
-                  blurRadius: 100.r,
-                  spreadRadius: 16.r,
+                  blurRadius: 40.r,
+                  spreadRadius: 6.4.r,
                 ),
               ],
             ),
@@ -449,44 +451,7 @@ class _SlideText extends StatelessWidget {
 // ─────────────────────────────────────────────
 // 6. DOT INDICATOR
 // ─────────────────────────────────────────────
-// A row of dots. The active dot is wider (24px)
-// and colored steel blue. Inactive dots are small
-// (6px) and dim. Tappable to jump to that slide.
-
-class _DotIndicator extends StatelessWidget {
-  final int count;
-  final int activeIndex;
-  final ValueChanged<int> onTap;
-
-  const _DotIndicator({
-    required this.count,
-    required this.activeIndex,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(count, (i) {
-        final isActive = i == activeIndex;
-        return GestureDetector(
-          onTap: () => onTap(i),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            width: isActive ? 24.w : 6.w,
-            height: 6.h,
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3.r),
-              color: isActive ? AppColors.steel : AppColors.dim,
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
+// Uses the shared StepDotIndicator widget (widgets/step_dot_indicator.dart).
 
 // ─────────────────────────────────────────────
 // 7. BOTTOM BUTTONS
@@ -515,9 +480,9 @@ class _BottomButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            _GradientButton(label: "LET'S GO", onTap: onNext)
+            GradientButton(label: "LET'S GO", onTap: onNext)
           else
-            _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
+            GradientButton(label: 'GET STARTED', onTap: onGetStarted),
           SizedBox(height: 20.h),
           Visibility(
             visible: isLastStep,
@@ -549,55 +514,7 @@ class _BottomButtons extends StatelessWidget {
   }
 }
 
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-
-  const _GradientButton({required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.steel, AppColors.steelLight],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.steelLight.withValues(alpha: 0.5),
-              blurRadius: 60.r,
-              spreadRadius: 8.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.barlowCondensed(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 0.8,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// GradientButton is now the shared widgets/gradient_button.dart widget.
 
 // ─────────────────────────────────────────────
 // DATA: Slide content definition
