@@ -2,6 +2,19 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // Mapbox's map SDK is hosted on their private Maven server. This tells
+        // Gradle where to find it and authenticates with the secret download
+        // token from ~/.gradle/gradle.properties (MAPBOX_DOWNLOADS_TOKEN).
+        maven {
+            url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+            credentials {
+                username = "mapbox"
+                password = providers.gradleProperty("MAPBOX_DOWNLOADS_TOKEN").getOrElse("")
+            }
+        }
     }
 }
 
