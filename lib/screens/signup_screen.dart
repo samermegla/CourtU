@@ -8,32 +8,16 @@ import '../widgets/sso_block.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
 
-enum _Sport { volleyball, basketball, tennis, pingpong, pickleball }
-
-const _sportEmoji = {
-  _Sport.volleyball: '🏐',
-  _Sport.basketball: '🏀',
-  _Sport.tennis: '🎾',
-  _Sport.pingpong: '🏓',
-  _Sport.pickleball: '🟡',
-};
-
-const _sportLabel = {
-  _Sport.volleyball: 'VOLL',
-  _Sport.basketball: 'BASK',
-  _Sport.tennis: 'TENN',
-  _Sport.pingpong: 'PING',
-  _Sport.pickleball: 'PICK',
-};
-
 class SignUpScreen extends StatefulWidget {
   final VoidCallback onBack;
   final VoidCallback onCreateAccount;
+  final VoidCallback onSignIn;
 
   const SignUpScreen({
     super.key,
     required this.onBack,
     required this.onCreateAccount,
+    required this.onSignIn,
   });
 
   @override
@@ -50,7 +34,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _showPass = false;
   bool _isLoading = false;
   bool _isGoogleLoading = false;
-  _Sport? _selectedSport;
   bool _locationConsent = true;
 
   @override
@@ -228,64 +211,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 20.h),
-                  // Primary sport label
-                  Text(
-                    'Primary Sport',
-                    style: GoogleFonts.jetBrainsMono(
-                      fontSize: 10.sp,
-                      letterSpacing: 1.2,
-                      color: const Color(0xFF4a5a72),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  // Sport selector
-                  Row(
-                    children: _Sport.values.map((sport) {
-                      final selected = _selectedSport == sport;
-                      final color = AppColors.sportColor(sport.name);
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _selectedSport = sport),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.w),
-                            padding: EdgeInsets.symmetric(vertical: 10.h),
-                            decoration: BoxDecoration(
-                              color: selected
-                                  ? color.withValues(alpha: 0.09)
-                                  : AppColors.muted,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(
-                                color: selected
-                                    ? color
-                                    : AppColors.steel.withValues(alpha: 0.16),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  _sportEmoji[sport]!,
-                                  style: TextStyle(fontSize: 20.sp),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text(
-                                  _sportLabel[sport]!,
-                                  style: GoogleFonts.jetBrainsMono(
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: selected
-                                        ? color
-                                        : const Color(0xFF4a5a72),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 20.h),
                   // Location consent
                   GestureDetector(
                     onTap: () => setState(() => _locationConsent = !_locationConsent),
@@ -379,6 +304,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextSpan(
                           text: 'Privacy Policy',
                           style: TextStyle(color: AppColors.steelLight),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20.h),
+                  // Sign in prompt
+                  Text.rich(
+                    TextSpan(
+                      text: 'Already have an account? ',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 12.sp,
+                        color: const Color(0xFF4a5a72),
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: GestureDetector(
+                            onTap: widget.onSignIn,
+                            child: Text(
+                              'Sign in',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.steelLight,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
