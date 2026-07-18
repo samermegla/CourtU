@@ -10,6 +10,7 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: MapWidget(
+        styleUri: 'mapbox://styles/pablo-nguyen/cmrqnug2m00e401s771jb658j',
         cameraOptions: CameraOptions(
           center: Point(coordinates: Position(-96.7502, 32.9857)),
           zoom: 15,
