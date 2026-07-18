@@ -39,8 +39,12 @@ Full user flow, in order:
 - **Google Sign-In on Android**: known "[16] Account reauth failed"
   issue with Samer's account. Unresolved.
 - **Onboarding slide 1**: unresolved 19px overflow.
-- **Mapbox secret download token missing** — confirmed absent from
-  android/gradle.properties; last build log showed ClassNotFoundException
-  spam. Must be fixed before the map can render (Task 2).
-- Map wiring (welcome → MapScreen) approved but never visually confirmed
-  on the emulator.
+- **Mapbox download token set (resolved Jul 18, 2026)** — token lives in the
+  global ~/.gradle/gradle.properties and the Maven repo is wired into
+  android/build.gradle.kts. Map renders (real tiles, centered on UTD) after
+  the welcome screen on emulator-5554. Note: `com.mapbox.common`
+  ClassNotFoundException log spam still appears during startup but is
+  confirmed NON-FATAL — the map renders through it. Don't chase it.
+- **Welcome→map flow + custom style visually confirmed** on emulator-5554
+  (Jul 18, 2026) — map renders in the published dark-blue Mapbox Studio
+  style after the welcome screen.
