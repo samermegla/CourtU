@@ -2,21 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Size;
 import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/signin_screen.dart';
-import 'screens/home_screen.dart';
 import 'screens/verify_email_screen.dart';
+import 'screens/profile_setup/profile_setup_data.dart';
+import 'screens/profile_setup/profile_setup_screen.dart';
+import 'screens/welcome_screen.dart';
+import 'screens/map_screen.dart';
 import 'services/auth_service.dart';
 import 'theme/colors.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MapboxOptions.setAccessToken(
+    const String.fromEnvironment('MAPBOX_ACCESS_TOKEN'),
+  );
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, 
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const CourtUApp());
 }
@@ -69,13 +76,32 @@ class CourtUApp extends StatelessWidget {
 
 /// Derives the top-level UI from Firebase's auth state instead of navigating
 /// imperatively: signed out shows the onboarding flow, signed in but
-/// unverified is held at the verification screen, verified lands on home.
-class AuthGate extends StatelessWidget {
-  AuthGate({super.key});
+/// unverified is held at the verification screen, verified but new goes
+/// through Profile Setup once, then a brief welcome screen before landing
+/// on the map.
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
 
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
   // userChanges (not authStateChanges) so the gate also rebuilds when a
   // reload() picks up a freshly verified email.
   final Stream<User?> _userChanges = AuthService().userChanges;
+
+  // Session-only: there's no backend field yet to remember that a user has
+  // already completed Profile Setup, so this resets on every app restart or
+  // re-login. TODO: once a backend exists (e.g. Firestore `users/{uid}`),
+  // persist completion (and _profileData) there and read it back here
+  // instead of relying on in-memory state.
+  bool _profileSetupComplete = false;
+  bool _showMap = false;
+  ProfileSetupData? _profileData;
+
+  /// Exposed so a future backend-write step has something to read.
+  ProfileSetupData? get profileData => _profileData;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +122,21 @@ class AuthGate extends StatelessWidget {
         if (!user.emailVerified) {
           return const VerifyEmailScreen();
         }
-        return const HomeScreen();
+        if (!_profileSetupComplete) {
+          return ProfileSetupScreen(
+            onComplete: (data) => setState(() {
+              _profileData = data;
+              _profileSetupComplete = true;
+            }),
+          );
+        }
+        if (!_showMap) {
+          return WelcomeScreen(
+            nickname: _profileData!.nickname,
+            onDone: () => setState(() => _showMap = true),
+          );
+        }
+        return const MapScreen();
       },
     );
   }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
+import '../widgets/gradient_button.dart';
 import '../widgets/logo_wordmark.dart';
+import '../widgets/step_dot_indicator.dart';
 
 // ─────────────────────────────────────────────
 // 1. SCREEN SHELL
@@ -196,7 +198,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               body: slide.body,
                             ),
                             SizedBox(height: 24.h),
-                            _DotIndicator(
+                            StepDotIndicator(
                               count: _slides.length,
                               activeIndex: _step,
                               onTap: (i) => setState(() => _step = i),
@@ -471,44 +473,7 @@ class _SlideText extends StatelessWidget {
 // ─────────────────────────────────────────────
 // 6. DOT INDICATOR
 // ─────────────────────────────────────────────
-// A row of dots. The active dot is wider (24px)
-// and colored steel blue. Inactive dots are small
-// (6px) and dim. Tappable to jump to that slide.
-
-class _DotIndicator extends StatelessWidget {
-  final int count;
-  final int activeIndex;
-  final ValueChanged<int> onTap;
-
-  const _DotIndicator({
-    required this.count,
-    required this.activeIndex,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(count, (i) {
-        final isActive = i == activeIndex;
-        return GestureDetector(
-          onTap: () => onTap(i),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            width: isActive ? 24.w : 6.w,
-            height: 6.h,
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3.r),
-              color: isActive ? AppColors.steel : AppColors.dim,
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
+// Uses the shared StepDotIndicator widget (widgets/step_dot_indicator.dart).
 
 // ─────────────────────────────────────────────
 // 7. BOTTOM BUTTONS
@@ -540,12 +505,12 @@ class _BottomButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            _GradientButton(
+            GradientButton(
               label: step == 0 ? "LET'S GO" : 'NEXT',
               onTap: onNext,
             )
           else
-            _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
+            GradientButton(label: 'GET STARTED', onTap: onGetStarted),
           SizedBox(height: 20.h),
           Visibility(
             visible: isLastStep,
@@ -577,70 +542,8 @@ class _BottomButtons extends StatelessWidget {
   }
 }
 
-class _GradientButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-
-  const _GradientButton({required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          // Glow — PNG asset, replacing the old boxShadow. Positioned with
-          // negative insets (not width/height) so it stretches to bleed
-          // past the button's actual rendered size (which is dynamic,
-          // width: double.infinity) on all sides, roughly matching the old
-          // shadow's blur(60.r) + spread(8.r) reach.
-          Positioned(
-            left: -36.r,
-            right: -36.r,
-            top: -30.r,
-            bottom: -38.r,
-            child: IgnorePointer(
-              child: Image.asset(
-                'assets/images/glow_blue_ellipse.png',
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 16.h),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppColors.steel, AppColors.steelLight],
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.barlowCondensed(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// GradientButton is now the shared widgets/gradient_button.dart widget
+// (using the PNG glow_blue_ellipse.png glow, not a boxShadow).
 
 // ─────────────────────────────────────────────
 // DATA: Slide content definition
