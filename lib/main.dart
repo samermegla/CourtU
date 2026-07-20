@@ -117,6 +117,12 @@ class _AuthGateState extends State<AuthGate> {
         }
         final user = snapshot.data;
         if (user == null) {
+          // Covers both "never signed in" and "just signed out" (e.g. the
+          // dev reset-onboarding button) — either way the next sign-in
+          // should go through Profile Setup and Welcome again.
+          _profileSetupComplete = false;
+          _showMap = false;
+          _profileData = null;
           return const _AppFlow();
         }
         if (!user.emailVerified) {

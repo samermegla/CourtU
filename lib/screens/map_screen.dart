@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import '../services/auth_service.dart';
 import '../theme/colors.dart';
 
 /// A campus court shown on the map. Plain in-memory data for now — no
@@ -87,12 +89,51 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MapWidget(
-        onMapCreated: _onMapCreated,
-        styleUri: 'mapbox://styles/pablo-nguyen/cmrqnug2m00e401s771jb658j',
-        cameraOptions: CameraOptions(
-          center: Point(coordinates: Position(-96.7502, 32.9857)),
-          zoom: 14.3,
+      body: Stack(
+        children: [
+          MapWidget(
+            onMapCreated: _onMapCreated,
+            styleUri: 'mapbox://styles/pablo-nguyen/cmrqnug2m00e401s771jb658j',
+            cameraOptions: CameraOptions(
+              center: Point(coordinates: Position(-96.7502, 32.9857)),
+              zoom: 14.3,
+            ),
+          ),
+          // Dev-only: replays the loading/onboarding/setup flow without
+          // reinstalling. Signing out is enough — AuthGate resets its
+          // Profile Setup / Welcome flags whenever the user goes null.
+          if (kDebugMode) const Positioned(top: 8, right: 8, child: _DevResetOnboardingButton()),
+        ],
+      ),
+    );
+  }
+}
+
+class _DevResetOnboardingButton extends StatelessWidget {
+  const _DevResetOnboardingButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Tooltip(
+        message: 'Dev: restart onboarding',
+        child: Material(
+          color: AppColors.card.withValues(alpha: 0.85),
+          shape: const CircleBorder(
+            side: BorderSide(color: AppColors.destructive, width: 1),
+          ),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () => AuthService().signOut(),
+            child: Padding(
+              padding: EdgeInsets.all(10.r),
+              child: Icon(
+                Icons.replay,
+                size: 18.sp,
+                color: AppColors.destructive,
+              ),
+            ),
+          ),
         ),
       ),
     );
