@@ -60,6 +60,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.png
-    
+    - assets/images/glow_blue.png
+    - assets/images/glow_blue_ellipse.png
 
 

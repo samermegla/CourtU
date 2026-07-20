@@ -53,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _SlideData(
       tag: 'CONNECT',
       emoji: '🏐',
-      headline: 'SHOW UP\nPLAY HARD\nTOGETHER.',
+      headline: 'SHOW UP\nTOGETHER.',
       body:
           'Tap into a court to let others know you\'re there. Rally up players in seconds, not hours.',
       floats: [
@@ -158,9 +158,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             _TopBar(onSkip: widget.onGetStarted),
 
             // ── Slide content (takes remaining space) ──
-            // Wrapped in a scroll view that centers the content when there is
-            // room and scrolls it when the viewport is too short — so the
-            // screen never throws an overflow error on small devices.
+            // Wrapped in a scroll view that anchors the content to the top
+            // when there is room and scrolls it when the viewport is too
+            // short — so the screen never throws an overflow error on small
+            // devices. Anchored to the top (not centered) so the tag pill
+            // and emoji card sit at the same fixed position on every slide,
+            // regardless of how many lines that slide's headline/body wrap
+            // to below it.
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -173,7 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: IntrinsicHeight(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Transform.translate(
                               offset: Offset(0, 8.h),
@@ -184,6 +188,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               emoji: slide.emoji,
                               emojiFontSize: slide.emojiFontSize,
                               floats: slide.floats,
+                              accentColor: slide.accentColor,
                             ),
                             SizedBox(height: 24.h),
                             _SlideText(
@@ -212,6 +217,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // ── Bottom buttons (always visible) ──
             _BottomButtons(
+              step: _step,
               isLastStep: _isLastStep,
               onNext: () => setState(() => _step++),
               onGetStarted: widget.onGetStarted,
@@ -327,15 +333,22 @@ class _EmojiCard extends StatelessWidget {
   final String emoji;
   final double emojiFontSize;
   final List<_FloatData> floats;
+  final Color? accentColor;
 
   const _EmojiCard({
     required this.emoji,
     this.emojiFontSize = 82,
     this.floats = const [],
+    this.accentColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    final Color base = accentColor ?? AppColors.steel;
+    // Total glow reach — how far past the card's edges the glow visually
+    // extends. Sets the PNG glow's size.
+    final double glowReach = 84.r;
+    final double glowOuterSize = 180.r + 2 * glowReach;
     return SizedBox(
       width: 220.r,
       height: 220.r,
@@ -343,6 +356,22 @@ class _EmojiCard extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
+          // Glow (behind card) — PNG asset, sized to roughly the same
+          // visual reach the old boxShadow glow had. Wrapped in Positioned
+          // (not a plain Stack child) because non-positioned Stack children
+          // get clamped to the Stack's own box (220.r) regardless of the
+          // width/height given to them — Positioned is exempt from that,
+          // so this can actually overflow past the card's edges.
+          Positioned(
+            top: (220.r - glowOuterSize) / 2,
+            left: (220.r - glowOuterSize) / 2,
+            width: glowOuterSize,
+            height: glowOuterSize,
+            child: Image.asset(
+              'assets/images/glow_blue.png',
+              fit: BoxFit.contain,
+            ),
+          ),
           // Card
           Container(
             width: 180.r,
@@ -353,21 +382,14 @@ class _EmojiCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.steel.withValues(alpha: 0.08),
-                  AppColors.steel.withValues(alpha: 0.08),
+                  base.withValues(alpha: accentColor != null ? 0.22 : 0.08),
+                  base.withValues(alpha: accentColor != null ? 0.22 : 0.08),
                 ],
               ),
               border: Border.all(
-                color: AppColors.steel.withValues(alpha: 0.27),
+                color: base.withValues(alpha: accentColor != null ? 0.6 : 0.27),
                 width: 1.5,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.steel.withValues(alpha: 0.45),
-                  blurRadius: 100.r,
-                  spreadRadius: 16.r,
-                ),
-              ],
             ),
             alignment: Alignment.center,
             child: Text(emoji, style: TextStyle(fontSize: emojiFontSize.sp)),
@@ -491,16 +513,19 @@ class _DotIndicator extends StatelessWidget {
 // ─────────────────────────────────────────────
 // 7. BOTTOM BUTTONS
 // ─────────────────────────────────────────────
-// Shows "NEXT →" on slides 0-1, or "GET STARTED"
-// + "ALREADY HAVE AN ACCOUNT" on the last slide.
+// Shows "LET'S GO" on slide 0, "NEXT" on slide 1, or "GET STARTED"
+// + "ALREADY HAVE AN ACCOUNT" on the last slide. All three carry a
+// trailing arrow icon (added by _GradientButton itself).
 
 class _BottomButtons extends StatelessWidget {
+  final int step;
   final bool isLastStep;
   final VoidCallback onNext;
   final VoidCallback onGetStarted;
   final VoidCallback onSignIn;
 
   const _BottomButtons({
+    required this.step,
     required this.isLastStep,
     required this.onNext,
     required this.onGetStarted,
@@ -515,7 +540,10 @@ class _BottomButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            _GradientButton(label: "LET'S GO", onTap: onNext)
+            _GradientButton(
+              label: step == 0 ? "LET'S GO" : 'NEXT',
+              onTap: onNext,
+            )
           else
             _GradientButton(label: 'GET STARTED', onTap: onGetStarted),
           SizedBox(height: 20.h),
@@ -559,41 +587,56 @@ class _GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.steel, AppColors.steelLight],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.steelLight.withValues(alpha: 0.5),
-              blurRadius: 60.r,
-              spreadRadius: 8.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.barlowCondensed(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                letterSpacing: 0.8,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          // Glow — PNG asset, replacing the old boxShadow. Positioned with
+          // negative insets (not width/height) so it stretches to bleed
+          // past the button's actual rendered size (which is dynamic,
+          // width: double.infinity) on all sides, roughly matching the old
+          // shadow's blur(60.r) + spread(8.r) reach.
+          Positioned(
+            left: -36.r,
+            right: -36.r,
+            top: -30.r,
+            bottom: -38.r,
+            child: IgnorePointer(
+              child: Image.asset(
+                'assets/images/glow_blue_ellipse.png',
+                fit: BoxFit.fill,
               ),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
-          ],
-        ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.r),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.steel, AppColors.steelLight],
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: GoogleFonts.barlowCondensed(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Icon(Icons.arrow_forward, size: 16.sp, color: Colors.white),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -610,6 +653,7 @@ class _SlideData {
   final String headline;
   final String body;
   final List<_FloatData> floats;
+  final Color? accentColor;
 
   const _SlideData({
     required this.tag,
@@ -618,6 +662,7 @@ class _SlideData {
     required this.headline,
     required this.body,
     this.floats = const [],
+    this.accentColor,
   });
 }
 
