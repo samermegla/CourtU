@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../theme/colors.dart';
-import '../widgets/gradient_button.dart';
 
 /// A campus court shown on the map. Plain in-memory data for now — no
 /// backend. Add more entries to [_courts] as courts are onboarded.
@@ -143,6 +142,23 @@ class _VenueSheet extends StatelessWidget {
             SizedBox(height: 14.h),
             Row(
               children: [
+                // Neon red live-status dot.
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.neonRed,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.neonRed.withValues(alpha: 0.6),
+                        blurRadius: 8.r,
+                        spreadRadius: 1.r,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 8.w),
                 Icon(
                   Icons.people_outline,
                   size: 16.sp,
@@ -159,11 +175,43 @@ class _VenueSheet extends StatelessWidget {
               ],
             ),
             SizedBox(height: 24.h),
-            // Disabled placeholder — check-in isn't wired yet.
-            GradientButton(
-              label: "I'M GOING",
-              onTap: () {},
-              enabled: false,
+            // Styled like the app's gradient button but NOT wired yet —
+            // check-in needs the Firestore sessions collection + rules.
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.r),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.steel, AppColors.steelLight],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.steelLight.withValues(alpha: 0.5),
+                    blurRadius: 24.r,
+                    spreadRadius: 3.2.r,
+                    offset: Offset(0, 4.h),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                "I'M GOING!",
+                style: GoogleFonts.barlowCondensed(
+                  fontSize: 19.2.sp,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.neonMint,
+                  letterSpacing: 0.8,
+                  shadows: [
+                    Shadow(
+                      color: AppColors.neonMint.withValues(alpha: 0.6),
+                      blurRadius: 12,
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 10.h),
             Center(

@@ -14,6 +14,10 @@ class AppColors {
   static const accent = Color(0xFFff6b35);
   // Bright neon creamy red-orange — used for court markers on the map.
   static const courtMarker = Color(0xFFff6e4e);
+  // Pastel neon light green — "I'm going" check-in call-to-action.
+  static const neonMint = Color(0xFFa6ffb2);
+  // Neon red — live-status indicator dot.
+  static const neonRed = Color(0xFFff3b3b);
   static const green = Color(0xFF1ddf64);
   static const destructive = Color(0xFFef4444);
 
