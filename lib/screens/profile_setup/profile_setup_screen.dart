@@ -181,7 +181,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             Padding(
               padding: EdgeInsets.fromLTRB(24.w, 8.h, 24.w, 24.h),
               child: GradientButton(
-                label: isLastStep ? "LET'S GO" : 'NEXT →',
+                label: isLastStep ? "LET'S GO" : 'NEXT',
                 onTap: _next,
                 enabled: _canAdvance,
               ),

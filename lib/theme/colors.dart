@@ -12,6 +12,8 @@ class AppColors {
   static const mutedForeground = Color(0xFF6b7fa3);
   static const foreground = Color(0xFFe8f0fe);
   static const accent = Color(0xFFff6b35);
+  // Bright neon creamy red-orange — used for court markers on the map.
+  static const courtMarker = Color(0xFFff6e4e);
   static const green = Color(0xFF1ddf64);
   static const destructive = Color(0xFFef4444);
 
