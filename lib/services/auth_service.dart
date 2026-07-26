@@ -116,6 +116,20 @@ class AuthService {
       throw e.message ?? 'Could not send the reset email.';
     }
   }
+   /// Saves the name the user wants to be called. Writing the display name
+  /// makes `userChanges` emit, so the AuthGate rebuilds and moves the user off
+  /// the username prompt on its own — no navigation needed at the call site.
+  Future<void> updateDisplayName(String name) async {
+    try {
+      await _auth.currentUser?.updateDisplayName(name);
+      // updateDisplayName mutates the cached User in place; reload forces a
+      // fresh profile so the new name is guaranteed present on the next emit.
+      await _auth.currentUser?.reload();
+    } on FirebaseAuthException catch (e) {
+      throw e.message ?? 'Could not save your name.';
+    }
+  }
+
 
   Future<void> signOut() => _auth.signOut();
 

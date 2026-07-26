@@ -13,7 +13,7 @@ import '../widgets/logo_wordmark.dart';
 // (TagPill + EmojiCard + SlideText + Dots) → BottomButtons.
 
 class OnboardingScreen extends StatefulWidget {
-  final VoidCallback onGetStarted;
+  final VoidCallback onGetStarted; //VoidCallback = will not return any value
   final VoidCallback onSignIn;
 
   const OnboardingScreen({
@@ -29,8 +29,9 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _step = 0;
 
+
   static final _slides = [
-    _SlideData(
+    _SlideData( //First slide
       tag: 'REAL-TIME MAP',
       emoji: '🗺️',
       headline: 'Your Campus,\nAlive in\nReal Time',
@@ -49,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ],
     ),
-    _SlideData(
+    _SlideData( //Second slide
       tag: 'CONNECT',
       emoji: '🏐',
       headline: 'Show Up,\nPlay\nTogether',
@@ -93,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ],
     ),
-    _SlideData(
+    _SlideData( //Third slide
       tag: 'LEVEL UP',
       emoji: '⚡',
       headline: 'Level Up\nEvery\nSession',
@@ -140,7 +141,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
   ];
 
-  bool get _isLastStep => _step == _slides.length - 1;
+  bool get _isLastStep => _step == _slides.length - 1; //checks if last slide or not
 
   @override
   Widget build(BuildContext context) {

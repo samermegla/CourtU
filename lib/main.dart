@@ -9,6 +9,7 @@ import 'screens/signup_screen.dart';
 import 'screens/signin_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/verify_email_screen.dart';
+import 'screens/username.dart';
 import 'services/auth_service.dart';
 import 'theme/colors.dart';
 
@@ -95,6 +96,13 @@ class AuthGate extends StatelessWidget {
         }
         if (!user.emailVerified) {
           return const VerifyEmailScreen();
+        }
+        // Newly signed-up accounts have no display name yet; hold them at the
+        // username prompt until they pick one. Google accounts arrive with a
+        // name already, so they skip straight to home.
+        final displayName = user.displayName?.trim() ?? '';
+        if (displayName.isEmpty) {
+          return const UsernameScreen();
         }
         return const HomeScreen();
       },
