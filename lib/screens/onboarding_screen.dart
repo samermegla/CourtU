@@ -33,7 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static final _slides = [
     _SlideData(
-      tag: 'REAL-TIME MAP',
+      tag: 'real-time map',
       emoji: '🗺️',
       emojiFontSize: 104.55,
       headline: 'Your campus\nin real time.',
@@ -174,12 +174,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: IntrinsicHeight(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          // Top-anchored (not centered) so the tag, emoji
+                          // card, etc. sit at the exact same spot on every
+                          // slide — only the trailing whitespace below the
+                          // body text grows/shrinks with each slide's text
+                          // length, instead of the whole group drifting.
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Transform.translate(
-                              offset: Offset(0, 8.h),
-                              child: _TagPill(label: slide.tag),
-                            ),
+                            // Fixed gap below the top bar — the anchor point
+                            // every slide's tag pill is flush against.
+                            SizedBox(height: 30.h),
+                            _TagPill(label: slide.tag),
                             SizedBox(height: 32.h),
                             _EmojiCard(
                               emoji: slide.emoji,
@@ -290,7 +295,7 @@ class _TagPill extends StatelessWidget {
             height: 6.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: label == 'REAL-TIME MAP'
+              color: label == 'real-time map'
                   ? Colors.red
                   : label == 'connect'
                       ? Colors.green
@@ -307,18 +312,6 @@ class _TagPill extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.black,
               letterSpacing: 1,
-              shadows: label == 'REAL-TIME MAP'
-                  ? [
-                      Shadow(
-                        color: Colors.red.withValues(alpha: 0.75),
-                        blurRadius: 16,
-                      ),
-                      Shadow(
-                        color: Colors.red.withValues(alpha: 0.5),
-                        blurRadius: 28,
-                      ),
-                    ]
-                  : null,
             ),
           ),
         ],
