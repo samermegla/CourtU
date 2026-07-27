@@ -167,10 +167,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 12.h),
                   Text(
                     'Create your\naccount',
-                    style: GoogleFonts.barlowCondensed(
+                    style: GoogleFonts.arimo(
                       fontSize: 32.sp,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                      color: Colors.black,
                       height: 1.0,
                       letterSpacing: 0.64,
                     ),
@@ -414,14 +414,7 @@ class _GradientButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.steel.withValues(alpha: loading ? 0.6 : 1),
-              AppColors.steelLight.withValues(alpha: loading ? 0.6 : 1),
-            ],
-          ),
+          color: AppColors.accentBlue.withValues(alpha: loading ? 0.6 : 1),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

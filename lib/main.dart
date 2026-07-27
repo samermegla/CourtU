@@ -45,10 +45,10 @@ class CourtUApp extends StatelessWidget {
           title: 'CourtU',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: const Color(0xFF080d18),
-            colorScheme: const ColorScheme.dark(
-              surface: Color(0xFF080d18),
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: AppColors.background,
+            colorScheme: const ColorScheme.light(
+              surface: AppColors.background,
               primary: Color(0xFF4B6D8A),
               secondary: Color(0xFF1ddf64),
             ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const background = Color(0xFF0c1424);
+  static const background = Color(0xFFFFFFFF);
   static const card = Color(0xFF0f1626);
   static const muted = Color(0xFF131e33);
   static const dim = Color(0xFF1a2540);
@@ -12,6 +12,9 @@ class AppColors {
   static const mutedForeground = Color(0xFF6b7fa3);
   static const foreground = Color(0xFFe8f0fe);
   static const accent = Color(0xFFff6b35);
+  // Calm steel-blue — solid fill for primary CTA buttons (Let's Go, Get
+  // Started, Create Account).
+  static const accentBlue = Color(0xFF7B93B5);
   // Bright neon creamy red-orange — used for court markers on the map.
   static const courtMarker = Color(0xFFff6e4e);
   // Pastel neon light green — "I'm going" check-in call-to-action.

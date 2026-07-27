@@ -92,10 +92,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               Text(
                 'Verify your email',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.arimo(
                   fontSize: 30.sp,
                   fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               SizedBox(height: 10.h),

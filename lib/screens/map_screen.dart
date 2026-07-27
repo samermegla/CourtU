@@ -172,7 +172,7 @@ class _VenueSheet extends StatelessWidget {
             SizedBox(height: 20.h),
             Text(
               court.name.toUpperCase(),
-              style: GoogleFonts.barlowCondensed(
+              style: GoogleFonts.arimo(
                 fontSize: 28.sp,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,

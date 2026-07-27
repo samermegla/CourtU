@@ -32,10 +32,10 @@ class PositionStep extends StatelessWidget {
         Text(
           'Which positions\ndo you play?',
           textAlign: TextAlign.center,
-          style: GoogleFonts.barlowCondensed(
+          style: GoogleFonts.arimo(
             fontSize: 32.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.white,
+            color: Colors.black,
             height: 1.0,
             letterSpacing: 0.64,
           ),

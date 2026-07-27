@@ -36,9 +36,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       tag: 'REAL-TIME MAP',
       emoji: '🗺️',
       emojiFontSize: 104.55,
-      headline: 'YOUR CAMPUS\nIN REAL TIME.',
-      body:
-          'See which courts are buzzing now. Every rec, gym, and outdoor court - live.',
+      headline: 'Your campus\nin real time.',
+      body: 'See which courts are buzzing now.',
       floats: [
         _FloatData(
           top: 24,
@@ -53,9 +52,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
     ),
     _SlideData(
-      tag: 'CONNECT',
+      tag: 'connect',
       emoji: '🏐',
-      headline: 'SHOW UP\nTOGETHER.',
+      headline: 'Show up\ntogether.',
       body:
           'Tap into a court to let others know you\'re there. Rally up players in seconds, not hours.',
       floats: [
@@ -99,9 +98,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
     ),
     _SlideData(
-      tag: 'CUSTOMIZE',
+      tag: 'customize',
       emoji: '🦕',
-      headline: 'CUSTOMIZE\nAND MAKE\nFRIENDS.',
+      headline: 'Customize\nand make\nfriends.',
       body:
           'Personalize your sports identity.\nInvite your friends to join!',
       floats: [
@@ -192,12 +191,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               headline: slide.headline,
                               body: slide.body,
                             ),
-                            SizedBox(height: 24.h),
-                            StepDotIndicator(
-                              count: _slides.length,
-                              activeIndex: _step,
-                              onTap: (i) => setState(() => _step = i),
-                            ),
                             // Extra breathing room before the buttons. Lives
                             // in the scroll-safe area (scrolls instead of
                             // overflowing on short screens) rather than in
@@ -215,9 +208,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // ── Bottom buttons (always visible) ──
             _BottomButtons(
               isLastStep: _isLastStep,
+              stepCount: _slides.length,
+              activeStep: _step,
               onNext: () => setState(() => _step++),
               onGetStarted: widget.onGetStarted,
               onSignIn: widget.onSignIn,
+              onDotTap: (i) => setState(() => _step = i),
             ),
           ],
         ),
@@ -296,9 +292,9 @@ class _TagPill extends StatelessWidget {
               shape: BoxShape.circle,
               color: label == 'REAL-TIME MAP'
                   ? Colors.red
-                  : label == 'CONNECT'
+                  : label == 'connect'
                       ? Colors.green
-                      : label == 'CUSTOMIZE'
+                      : label == 'customize'
                           ? Colors.blue
                           : AppColors.steelLight,
             ),
@@ -309,8 +305,20 @@ class _TagPill extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFFF5F5F0),
+              color: Colors.black,
               letterSpacing: 1,
+              shadows: label == 'REAL-TIME MAP'
+                  ? [
+                      Shadow(
+                        color: Colors.red.withValues(alpha: 0.75),
+                        blurRadius: 16,
+                      ),
+                      Shadow(
+                        color: Colors.red.withValues(alpha: 0.5),
+                        blurRadius: 28,
+                      ),
+                    ]
+                  : null,
             ),
           ),
         ],
@@ -407,7 +415,7 @@ class _FloatData {
 // ─────────────────────────────────────────────
 // 5. SLIDE TEXT
 // ─────────────────────────────────────────────
-// The headline (BarlowCondensed, bold, large) and
+// The headline (Arimo — Helvetica Now stand-in, bold, large) and
 // body paragraph (DMSans, muted color).
 
 class _SlideText extends StatelessWidget {
@@ -422,10 +430,10 @@ class _SlideText extends StatelessWidget {
         Text(
           headline,
           textAlign: TextAlign.center,
-          style: GoogleFonts.barlowCondensed(
+          style: GoogleFonts.arimo(
             fontSize: 38.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.white,
+            color: Colors.black,
             height: 0.92,
             letterSpacing: 0.38,
           ),
@@ -436,7 +444,7 @@ class _SlideText extends StatelessWidget {
           child: Text(
             body,
             textAlign: TextAlign.center,
-            style: GoogleFonts.dmSans(
+            style: GoogleFonts.poppins(
               fontSize: 14.sp,
               color: AppColors.mutedForeground,
               height: 1.6,
@@ -461,29 +469,41 @@ class _SlideText extends StatelessWidget {
 
 class _BottomButtons extends StatelessWidget {
   final bool isLastStep;
+  final int stepCount;
+  final int activeStep;
   final VoidCallback onNext;
   final VoidCallback onGetStarted;
   final VoidCallback onSignIn;
+  final ValueChanged<int> onDotTap;
 
   const _BottomButtons({
     required this.isLastStep,
+    required this.stepCount,
+    required this.activeStep,
     required this.onNext,
     required this.onGetStarted,
     required this.onSignIn,
+    required this.onDotTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(24.w, 8.h, 24.w, 24.h),
+      padding: EdgeInsets.fromLTRB(24.w, 8.h, 24.w, 3.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (!isLastStep)
-            GradientButton(label: "LET'S GO", onTap: onNext)
+            GradientButton(label: 'NEXT', onTap: onNext)
           else
             GradientButton(label: 'GET STARTED', onTap: onGetStarted),
           SizedBox(height: 20.h),
+          StepDotIndicator(
+            count: stepCount,
+            activeIndex: activeStep,
+            onTap: onDotTap,
+          ),
+          SizedBox(height: 10.h),
           Visibility(
             visible: isLastStep,
             maintainSize: true,

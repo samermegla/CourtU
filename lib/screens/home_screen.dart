@@ -29,10 +29,10 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Text(
                       'You\'re in!',
-                      style: GoogleFonts.barlowCondensed(
+                      style: GoogleFonts.arimo(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.dmSans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.foreground,
+                          color: Colors.black,
                         ),
                       ),
                     ),

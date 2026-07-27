@@ -202,10 +202,10 @@ class _SplashScreenState extends State<SplashScreen>
                       // Title
                       Text(
                         'COURTU',
-                        style: GoogleFonts.barlowCondensed(
+                        style: GoogleFonts.arimo(
                           fontSize: 46.sp,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: Colors.black,
                           letterSpacing: 2.3,
                         ),
                       ),

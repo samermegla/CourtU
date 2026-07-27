@@ -36,7 +36,7 @@ class LogoWordmark extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'BarlowCondensed',
               fontWeight: FontWeight.w900,
-              color: Colors.white,
+              color: Colors.black,
               fontSize: (size * 0.55).sp,
               letterSpacing: (0.05 * size * 0.55).sp,
             ),

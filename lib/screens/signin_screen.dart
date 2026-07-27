@@ -169,10 +169,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           Text(
                             'Welcome back',
-                            style: GoogleFonts.barlowCondensed(
+                            style: GoogleFonts.arimo(
                               fontSize: 30.sp,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white,
+                              color: Colors.black,
                               height: 1.0,
                               letterSpacing: 0.9,
                             ),
