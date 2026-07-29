@@ -6,6 +6,7 @@ import '../widgets/logo_wordmark.dart';
 import '../widgets/auth_field.dart';
 import '../services/firestore_service.dart';
 import '../services/auth_service.dart';
+import 'welcome_screen.dart';
 
 /// Asks a freshly signed-up user what they'd like to be called and saves it as
 /// their Firebase display name. The AuthGate routes here whenever a verified
@@ -25,8 +26,14 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   bool _isLoading = false;
 
+  // Once set, the greeting transition takes over the whole screen. We hold the
+  // name locally because the display name isn't saved until the welcome
+  // animation finishes (saving it flips the AuthGate away from here).
+  bool _showWelcome = false;
+  String _welcomeName = '';
+
   @override
-  void dispose() { //method that runs once user leaves screen 
+  void dispose() { //method that runs once user leaves screen
     _nameController.dispose();
     super.dispose();
   }
@@ -41,7 +48,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
     setState(() => _isLoading = true);
 
-    //Try block ensures user is authenticated first before writing to database. 
+    //Try block ensures user is authenticated first before writing to database.
     try {
       final user = _authService.currentUser;
       if (user != null) {
@@ -52,13 +59,34 @@ class _UsernameScreenState extends State<UsernameScreen> {
         );
       }
 
-      // Saving the display name makes userChanges emit, so the AuthGate swaps
-      // this screen for home on its own — nothing to navigate here.
-      await _authService.updateDisplayName(name);
+      // Hand off to the welcome transition. It saves the display name when its
+      // fade-out finishes, which makes userChanges emit and lets the AuthGate
+      // swap this screen for whatever comes next.
+      if (mounted) {
+        setState(() {
+          _welcomeName = name;
+          _showWelcome = true;
+        });
+      }
     } catch (e) {
-      if (mounted) _showError(e.toString());
-    } finally {
       if (mounted) setState(() => _isLoading = false);
+      if (mounted) _showError(e.toString());
+    }
+  }
+
+  // Fired once the greeting has faded out. Saving the display name is the last
+  // step of the flow — the AuthGate rebuilds away from this screen after it.
+  Future<void> _finishWelcome() async {
+    try {
+      await _authService.updateDisplayName(_welcomeName);
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _showWelcome = false;
+          _isLoading = false;
+        });
+        _showError(e.toString());
+      }
     }
   }
 
@@ -70,6 +98,10 @@ class _UsernameScreenState extends State<UsernameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_showWelcome) {
+      return WelcomeScreen(username: _welcomeName, onComplete: _finishWelcome);
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -81,14 +113,18 @@ class _UsernameScreenState extends State<UsernameScreen> {
               SizedBox(height: 12.h),
               const LogoWordmark(size: 28),
               SizedBox(height: 28.h),
-              Text(
-                'What should we call you?',
-                style: GoogleFonts.barlowCondensed(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  height: 1.0,
-                  letterSpacing: 0.64,
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'What should we call you?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.barlowCondensed(
+                    fontSize: 32.sp,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    height: 1.0,
+                    letterSpacing: 0.64,
+                  ),
                 ),
               ),
               SizedBox(height: 6.h),
