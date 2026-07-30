@@ -36,8 +36,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       tag: 'real-time map',
       emoji: '🗺️',
       emojiFontSize: 104.55,
-      headline: 'Your campus\nin real time.',
-      body: 'See which courts are buzzing now.',
+      headline: 'Your courts.\nReal time.',
+      body: "See what's buzzing now.",
       floats: [
         _FloatData(
           top: 24,

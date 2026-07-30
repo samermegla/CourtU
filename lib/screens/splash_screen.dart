@@ -164,12 +164,19 @@ class _SplashScreenState extends State<SplashScreen>
             )),
             // Main content
             Center(
-              child: AnimatedBuilder(
-                animation: _entranceController,
-                builder: (context, _) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+              // Shift the whole block down so the LOGO PANE lands on the
+              // vertical center (where the ping rings converge), instead of
+              // the group as a whole being centered — which left the logo
+              // sitting high. ~60 ≈ half the height of the text + bar below
+              // the logo.
+              child: Transform.translate(
+                offset: Offset(0, 65.h),
+                child: AnimatedBuilder(
+                  animation: _entranceController,
+                  builder: (context, _) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                       // Logo mark
                       Transform.scale(
                         scale: _logoScale.value,
@@ -198,15 +205,18 @@ class _SplashScreenState extends State<SplashScreen>
                           child: const LogoMark(size: 74),
                         ),
                       ),
-                      SizedBox(height: 20.h),
-                      // Title
-                      Text(
-                        'COURTU',
-                        style: GoogleFonts.arimo(
-                          fontSize: 46.sp,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                          letterSpacing: 2.3,
+                      SizedBox(height: 5.h),
+                      // Title (nudged up 10 to sit tighter under the logo)
+                      Transform.translate(
+                        offset: Offset(0, -10.h),
+                        child: Text(
+                          'CourtU',
+                          style: GoogleFonts.barlowCondensed(
+                            fontSize: 60.835.sp,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
+                            letterSpacing: 2.3,
+                          ),
                         ),
                       ),
                       SizedBox(height: 6.h),
@@ -249,8 +259,9 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                     ],
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -358,7 +369,7 @@ class _MapBackdropPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final grid = Paint()
-      ..color = AppColors.steel.withValues(alpha: 0.04)
+      ..color = AppColors.steel.withValues(alpha: 0.09)
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
@@ -372,7 +383,7 @@ class _MapBackdropPainter extends CustomPainter {
 
     final road = Paint()..color = AppColors.dim.withValues(alpha: 0.2);
 
-    road.strokeWidth = 8;
+    road.strokeWidth = 5;
     canvas.drawLine(
       Offset(0, size.height / 2),
       Offset(size.width, size.height / 2),
@@ -384,15 +395,21 @@ class _MapBackdropPainter extends CustomPainter {
       road,
     );
 
+    // Big diagonal X, drawn at a true 45°: each line's horizontal travel
+    // equals its vertical travel (slope ±1), crossing at the screen center.
+    // On a tall screen this pushes the ends past the left/right edges, so the
+    // X is clipped by the screen rather than tapering toward the corners.
     road.strokeWidth = 4;
+    final cx = size.width / 2;
+    final half = size.height / 2;
     canvas.drawLine(
-      Offset(size.width * 0.2, 0),
-      Offset(size.width * 0.8, size.height),
+      Offset(cx - half, 0),
+      Offset(cx + half, size.height),
       road,
     );
     canvas.drawLine(
-      Offset(size.width * 0.8, 0),
-      Offset(size.width * 0.2, size.height),
+      Offset(cx + half, 0),
+      Offset(cx - half, size.height),
       road,
     );
 
