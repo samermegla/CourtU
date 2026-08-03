@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/courtu/linux"
+    "cmake.sourceDirectory": "C:/courtu/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
