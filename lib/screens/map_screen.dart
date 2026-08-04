@@ -30,6 +30,16 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
+    // Mapbox's terms require the logo and attribution (i) to stay visible —
+    // only their position/margins are ours to adjust. Tucked into the
+    // bottom-right, out of the way of future bottom sheets/nav bars.
+    await mapboxMap.logo.updateSettings(
+      LogoSettings(position: OrnamentPosition.BOTTOM_RIGHT, marginRight: 8, marginBottom: 8),
+    );
+    await mapboxMap.attribution.updateSettings(
+      AttributionSettings(position: OrnamentPosition.BOTTOM_RIGHT, marginRight: 8, marginBottom: 8),
+    );
+
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
 
     for (final court in _courts) {
