@@ -24,10 +24,59 @@ map with check-ins. Deadline: Aug 24, 2026 (first day of UTD fall semester).
   `AppColors.*` is only for values identical in both modes (brand, status,
   sport). Its legacy block is for three dead files; do not use it in new code.
 
+## UI map — where things live
+Read this before reading commits. It's the fast way to tell what a UI
+change touched without opening every diff.
+- **Screens** — `lib/screens/`, one file (or subfolder) per screen.
+  `profile_setup/` holds the multi-step flow; each step is its own file
+  under `profile_setup/steps/`.
+- **Shared widgets** — `lib/widgets/`. Reused across 2+ screens, so a
+  change here ripples wider than a single-screen edit:
+  - `gradient_button.dart` — the steel-gradient CTA button (onboarding,
+    profile setup).
+  - `step_dot_indicator.dart` — the step-progress dots (onboarding,
+    profile setup).
+  - `auth_field.dart` — text input used on sign-in/sign-up.
+  - `sso_block.dart` — Google / university SSO button pair.
+  - `logo_wordmark.dart` — the app logo mark.
+- **Theme** — `lib/theme/`:
+  - `colors.dart` — the only file with color hex values. `AppColorScheme`
+    holds the light/dark slots screens read via `context.colors.*`;
+    `AppColors` holds brand/status/sport colors that don't change with
+    theme.
+  - `app_theme.dart` — fonts (Poppins, jetBrainsMono) and `ThemeData`
+    wiring. Change a font here, not in a screen.
+  - `theme_controller.dart` — persists the user's Light/Dark/System
+    choice via `shared_preferences` and notifies the app on change.
+- **Config** — `lib/config/mapbox_config.dart` (Mapbox style URLs, incl.
+  light/dark map styles).
+
+If a change is confined to one screen file, it's cosmetic to that screen.
+If it touches `lib/widgets/` or `lib/theme/`, expect it to affect
+multiple screens — those are the files worth a closer look in review.
+
 ## Branch rules — non-negotiable
 - **NEVER commit or push to `main`.** Samer owns main and reviews PRs.
 - All work happens on `pablo-ux` or feature branches off it
   (currently `fable-hail-mary`). Ask before creating new branches.
+
+## Commit conventions — applies going forward, do not rewrite past history
+- One logical change per commit. Never bundle unrelated work into one
+  commit (e.g. a `.gitignore` fix riding inside a feature commit).
+- Format: `type(scope): what changed`
+  ```
+  feat(map): switch Mapbox style with light/dark theme
+  fix(signup): status bar icons now follow theme
+  chore(gitignore): exclude config/secrets.json
+  refactor(theme): replace fixed AppColors with context.colors
+  ```
+  Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `build`.
+- Config and dependency changes get their own commit, never bundled into a
+  feature commit. Applies to `.gitignore`, `pubspec.yaml`,
+  `build.gradle.kts`, `AndroidManifest.xml`, `Info.plist`.
+- If a commit message needs "and", it's probably two commits.
+- Body: one or two plain-English lines on WHY, not what — the diff already
+  shows what.
 
 ## Secrets & running
 - Mapbox public token lives in `config/secrets.json` (gitignored).
