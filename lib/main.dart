@@ -9,9 +9,9 @@ import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/signin_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/map_screen.dart';
 import 'screens/verify_email_screen.dart';
-import 'screens/username.dart';
+import 'screens/user_profile.dart';
 import 'services/auth_service.dart';
 import 'theme/colors.dart';
 
@@ -106,9 +106,9 @@ class AuthGate extends StatelessWidget {
         // name already, so they skip straight to home.
         final displayName = user.displayName?.trim() ?? '';
         if (displayName.isEmpty) {
-          return const UsernameScreen();
+          return const UserProfileScreen();
         }
-        return const HomeScreen();
+        return const MapScreen();
       },
     );
   }
