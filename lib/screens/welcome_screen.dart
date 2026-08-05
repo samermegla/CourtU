@@ -39,15 +39,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: Center(
         child: Text(
           'Welcome, ${widget.nickname}!',
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
+          style: GoogleFonts.poppins(
             fontSize: 32.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            color: context.colors.textPrimary,
             height: 1.0,
             letterSpacing: 0.64,
           ),

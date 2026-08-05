@@ -28,11 +28,11 @@ class GradientButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 16.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.r),
-            color: AppColors.accentBlue,
+            color: context.colors.accent,
             boxShadow: enabled
                 ? [
                     BoxShadow(
-                      color: AppColors.accentBlue.withValues(alpha: 0.5),
+                      color: context.colors.accent.withValues(alpha: 0.5),
                       blurRadius: 24.r,
                       spreadRadius: 3.2.r,
                       offset: Offset(0, 4.h),
@@ -45,7 +45,7 @@ class GradientButton extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.poppins(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w900,
                   color: Colors.white,

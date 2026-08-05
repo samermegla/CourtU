@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../theme/colors.dart';
 import '../../../widgets/auth_field.dart';
 
 /// Step 1: "What should we call you?" — a headline plus a single text field,
@@ -44,10 +45,10 @@ class _NicknameStepState extends State<NicknameStep> {
         Text(
           'What should we\ncall you?',
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
+          style: GoogleFonts.poppins(
             fontSize: 32.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            color: context.colors.textPrimary,
             height: 1.0,
             letterSpacing: 0.64,
           ),

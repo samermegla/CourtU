@@ -25,9 +25,9 @@ class AuthField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.muted,
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.steel.withValues(alpha: 0.2)),
+        border: Border.all(color: context.colors.steel.withValues(alpha: 0.2)),
       ),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       child: Row(
@@ -37,7 +37,7 @@ class AuthField extends StatelessWidget {
               padding: EdgeInsets.only(right: 12.w),
               child: IconTheme(
                 data: IconThemeData(
-                  color: AppColors.mutedForeground,
+                  color: context.colors.textSecondary,
                   size: 14.sp,
                 ),
                 child: icon!,
@@ -48,15 +48,15 @@ class AuthField extends StatelessWidget {
               controller: controller,
               obscureText: obscureText,
               keyboardType: keyboardType,
-              style: GoogleFonts.dmSans(
+              style: GoogleFonts.poppins(
                 fontSize: 14.sp,
-                color: Colors.white,
+                color: context.colors.textPrimary,
               ),
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: GoogleFonts.dmSans(
+                hintStyle: GoogleFonts.poppins(
                   fontSize: 14.sp,
-                  color: const Color(0xFF4a5a72),
+                  color: context.colors.textSecondary,
                 ),
                 border: InputBorder.none,
                 isDense: true,

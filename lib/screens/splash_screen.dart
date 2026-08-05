@@ -137,14 +137,19 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Container(
         // Flat background — the only glow on this screen is the logo's.
-        color: AppColors.background,
+        color: context.colors.background,
         child: Stack(
           children: [
             // Campus map backdrop — grid + roads, well behind everything
             Positioned.fill(
               child: FadeTransition(
                 opacity: _ambientFade,
-                child: CustomPaint(painter: _MapBackdropPainter()),
+                child: CustomPaint(
+                  painter: _MapBackdropPainter(
+                    steel: context.colors.steel,
+                    border: context.colors.border,
+                  ),
+                ),
               ),
             ),
             // Ping rings
@@ -184,14 +189,14 @@ class _SplashScreenState extends State<SplashScreen>
                           width: 104.r,
                           height: 104.r,
                           decoration: BoxDecoration(
-                            color: AppColors.muted,
+                            color: context.colors.surfaceAlt,
                             borderRadius: BorderRadius.circular(24.r),
                             border: Border.all(
-                              color: AppColors.steel.withValues(alpha: 0.33),
+                              color: context.colors.steel.withValues(alpha: 0.33),
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.steel.withValues(alpha: 0.45),
+                                color: context.colors.steel.withValues(alpha: 0.45),
                                 blurRadius: 52,
                               ),
                               BoxShadow(
@@ -211,10 +216,10 @@ class _SplashScreenState extends State<SplashScreen>
                         offset: Offset(0, -10.h),
                         child: Text(
                           'CourtU',
-                          style: GoogleFonts.barlowCondensed(
+                          style: GoogleFonts.poppins(
                             fontSize: 60.835.sp,
                             fontWeight: FontWeight.w900,
-                            color: Colors.black,
+                            color: context.colors.textPrimary,
                             letterSpacing: 2.3,
                           ),
                         ),
@@ -227,9 +232,9 @@ class _SplashScreenState extends State<SplashScreen>
                           opacity: _taglineFade,
                           child: Text(
                             'Play together. Level up.',
-                            style: GoogleFonts.dmSans(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.sp,
-                              color: AppColors.mutedForeground,
+                              color: context.colors.textSecondary,
                             ),
                           ),
                         ),
@@ -243,14 +248,14 @@ class _SplashScreenState extends State<SplashScreen>
                           child: Container(
                             width: 80.w,
                             height: 3.h,
-                            color: AppColors.dim,
+                            color: context.colors.border,
                             alignment: Alignment.centerLeft,
                             child: FractionallySizedBox(
                               widthFactor: _barWidth.value,
                               child: Container(
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [AppColors.steel, AppColors.steelLight],
+                                    colors: [context.colors.steel, context.colors.steelLight],
                                   ),
                                 ),
                               ),
@@ -322,7 +327,7 @@ class _CourtPin extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
           decoration: BoxDecoration(
-            color: AppColors.card.withValues(alpha: 0.7),
+            color: context.colors.surface.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(4.r),
             border: Border.all(color: pin.color.withValues(alpha: 0.2)),
           ),
@@ -347,6 +352,13 @@ class _CourtPin extends StatelessWidget {
 // behind the rings.
 
 class _MapBackdropPainter extends CustomPainter {
+  /// Painters sit outside the widget tree, so they can't read `context`.
+  /// The current theme's colors are handed in at construction instead.
+  final Color steel;
+  final Color border;
+
+  const _MapBackdropPainter({required this.steel, required this.border});
+
   /// Campus buildings: (dx, dy, width, height), where dx/dy offset the
   /// building's center from the center of the screen — the same coordinate
   /// space the pins use, so a pin sits squarely on its building.
@@ -369,7 +381,7 @@ class _MapBackdropPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final grid = Paint()
-      ..color = AppColors.steel.withValues(alpha: 0.09)
+      ..color = steel.withValues(alpha: 0.09)
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
@@ -381,7 +393,7 @@ class _MapBackdropPainter extends CustomPainter {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
     }
 
-    final road = Paint()..color = AppColors.dim.withValues(alpha: 0.2);
+    final road = Paint()..color = border.withValues(alpha: 0.2);
 
     road.strokeWidth = 5;
     canvas.drawLine(
@@ -415,11 +427,11 @@ class _MapBackdropPainter extends CustomPainter {
 
     // Building outlines, over the roads
     final buildingFill = Paint()
-      ..color = AppColors.dim.withValues(alpha: 0.22)
+      ..color = border.withValues(alpha: 0.22)
       ..style = PaintingStyle.fill;
 
     final buildingStroke = Paint()
-      ..color = AppColors.steel.withValues(alpha: 0.16)
+      ..color = steel.withValues(alpha: 0.16)
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
 
@@ -471,7 +483,7 @@ class _PingRing extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.steel.withValues(alpha: 0.6),
+                    color: context.colors.steel.withValues(alpha: 0.6),
                     width: 1.5,
                   ),
                 ),

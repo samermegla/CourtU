@@ -114,7 +114,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     final isLastStep = _step == _stepCount - 1;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -136,14 +136,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           Icon(
                             Icons.chevron_right,
                             size: 14.sp,
-                            color: const Color(0xFF4a5a72),
+                            color: context.colors.textSecondary,
                           ),
                           SizedBox(width: 4.w),
                           Text(
                             'Back',
-                            style: GoogleFonts.dmSans(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.sp,
-                              color: const Color(0xFF4a5a72),
+                              color: context.colors.textSecondary,
                             ),
                           ),
                         ],

@@ -1,10 +1,22 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import '../services/auth_service.dart';
 import '../theme/colors.dart';
+import 'settings_screen.dart';
+
+/// The two Mapbox Studio styles the map switches between.
+///
+/// Both render labels, but not the same ones: the dark style has road labels
+/// turned off (`showRoadLabels: false`) while the light style has them on, so
+/// light shows street names that dark does not. Cosmetic, and a Studio setting
+/// rather than anything this code controls — worth evening out if the mismatch
+/// is noticeable in use.
+class MapStyles {
+  MapStyles._();
+  static const dark = 'mapbox://styles/pablo-nguyen/cmrqnug2m00e401s771jb658j';
+  static const light = 'mapbox://styles/pablo-nguyen/cmruw2j0g006601s8ac963sm4';
+}
 
 /// A campus court shown on the map. Plain in-memory data for now — no
 /// backend. Add more entries to [_courts] as courts are onboarded.
@@ -29,7 +41,15 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  MapboxMap? _mapboxMap;
+
+  /// Where the camera was before the last style swap. Switching light/dark
+  /// rebuilds the map widget, which would otherwise snap back to the default
+  /// UTD framing and lose wherever the user had panned to.
+  CameraState? _lastCamera;
+
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
+    _mapboxMap = mapboxMap;
     // Mapbox's terms require the logo and attribution (i) to stay visible —
     // only their position/margins are ours to adjust. Tucked into the
     // bottom-right, out of the way of future bottom sheets/nav bars.
@@ -88,7 +108,7 @@ class _MapScreenState extends State<MapScreen> {
     if (!mounted) return;
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.card,
+      backgroundColor: context.colors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -96,51 +116,66 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  /// Remembers the current camera so a theme swap can restore it.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _mapboxMap?.getCameraState().then((c) {
+      if (mounted) _lastCamera = c;
+    }).catchError((_) {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Stack(
         children: [
           MapWidget(
+            // Changing the key forces a fresh map when the style swaps;
+            // without it the widget keeps the old style loaded.
+            key: ValueKey(isDark),
             onMapCreated: _onMapCreated,
-            styleUri: 'mapbox://styles/pablo-nguyen/cmrqnug2m00e401s771jb658j',
+            styleUri: isDark ? MapStyles.dark : MapStyles.light,
             cameraOptions: CameraOptions(
-              center: Point(coordinates: Position(-96.7502, 32.9857)),
-              zoom: 14.3,
+              center: _lastCamera?.center ??
+                  Point(coordinates: Position(-96.7502, 32.9857)),
+              zoom: _lastCamera?.zoom ?? 14.3,
             ),
           ),
-          // Dev-only: replays the loading/onboarding/setup flow without
-          // reinstalling. Signing out is enough — AuthGate resets its
-          // Profile Setup / Welcome flags whenever the user goes null.
-          if (kDebugMode) const Positioned(top: 8, right: 8, child: _DevResetOnboardingButton()),
+          // Gear sits top-right: the court markers live in the middle of the
+          // screen and Mapbox's logo/attribution are pinned bottom-right, so
+          // this is the one corner that collides with nothing.
+          const Positioned(top: 8, right: 8, child: _SettingsButton()),
         ],
       ),
     );
   }
 }
 
-class _DevResetOnboardingButton extends StatelessWidget {
-  const _DevResetOnboardingButton();
+/// Opens the settings screen. Always available, not debug-gated.
+class _SettingsButton extends StatelessWidget {
+  const _SettingsButton();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Tooltip(
-        message: 'Dev: restart onboarding',
+        message: 'Settings',
         child: Material(
-          color: AppColors.card.withValues(alpha: 0.85),
-          shape: const CircleBorder(
-            side: BorderSide(color: AppColors.destructive, width: 1),
-          ),
+          color: context.colors.surface.withValues(alpha: 0.9),
+          shape: CircleBorder(side: BorderSide(color: context.colors.border)),
           child: InkWell(
             customBorder: const CircleBorder(),
-            onTap: () => AuthService().signOut(),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
             child: Padding(
               padding: EdgeInsets.all(10.r),
               child: Icon(
-                Icons.replay,
-                size: 18.sp,
-                color: AppColors.destructive,
+                Icons.settings,
+                size: 20.sp,
+                color: context.colors.textPrimary,
               ),
             ),
           ),
@@ -174,7 +209,7 @@ class _VenueSheet extends StatelessWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppColors.mutedForeground.withValues(alpha: 0.4),
+                  color: context.colors.textSecondary.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -182,10 +217,10 @@ class _VenueSheet extends StatelessWidget {
             SizedBox(height: 20.h),
             Text(
               court.name.toUpperCase(),
-              style: GoogleFonts.arimo(
+              style: GoogleFonts.poppins(
                 fontSize: 28.sp,
                 fontWeight: FontWeight.w900,
-                color: Colors.white,
+                color: context.colors.textPrimary,
                 height: 1.0,
                 letterSpacing: 0.5,
               ),
@@ -213,14 +248,14 @@ class _VenueSheet extends StatelessWidget {
                 Icon(
                   Icons.people_outline,
                   size: 16.sp,
-                  color: AppColors.mutedForeground,
+                  color: context.colors.textSecondary,
                 ),
                 SizedBox(width: 8.w),
                 Text(
                   'Live players — coming soon',
-                  style: GoogleFonts.dmSans(
+                  style: GoogleFonts.poppins(
                     fontSize: 14.sp,
-                    color: AppColors.mutedForeground,
+                    color: context.colors.textSecondary,
                   ),
                 ),
               ],
@@ -233,14 +268,14 @@ class _VenueSheet extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 16.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.steel, AppColors.steelLight],
+                  colors: [context.colors.steel, context.colors.steelLight],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.steelLight.withValues(alpha: 0.5),
+                    color: context.colors.steelLight.withValues(alpha: 0.5),
                     blurRadius: 24.r,
                     spreadRadius: 3.2.r,
                     offset: Offset(0, 4.h),
@@ -250,7 +285,7 @@ class _VenueSheet extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 "I'M GOING!",
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.poppins(
                   fontSize: 19.2.sp,
                   fontWeight: FontWeight.w900,
                   color: AppColors.neonMint,
@@ -268,9 +303,9 @@ class _VenueSheet extends StatelessWidget {
             Center(
               child: Text(
                 'Check-in coming soon',
-                style: GoogleFonts.dmSans(
+                style: GoogleFonts.poppins(
                   fontSize: 12.sp,
-                  color: AppColors.mutedForeground,
+                  color: context.colors.textSecondary,
                 ),
               ),
             ),

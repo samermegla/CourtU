@@ -32,7 +32,9 @@ const _jerseyColors = [
   AppColors.tennis,
   AppColors.badminton,
   AppColors.pickleball,
-  AppColors.steelLight,
+  // Fixed, not themed: a jersey the player picked must look the same in
+  // light and dark mode, like the other five choices above.
+  Color(0xFF6B9AB8),
 ];
 
 /// Step 2: mix-and-match avatar builder. No illustrated art exists yet, so
@@ -64,10 +66,10 @@ class AvatarStep extends StatelessWidget {
         Text(
           'Make it yours',
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
+          style: GoogleFonts.poppins(
             fontSize: 32.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            color: context.colors.textPrimary,
             height: 1.0,
             letterSpacing: 0.64,
           ),
@@ -137,7 +139,7 @@ class _AvatarPreview extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            child: Icon(hairstyleIcon, size: 34.sp, color: AppColors.card),
+            child: Icon(hairstyleIcon, size: 34.sp, color: context.colors.surface),
           ),
           Positioned(
             bottom: 4.r,
@@ -147,7 +149,7 @@ class _AvatarPreview extends StatelessWidget {
               decoration: BoxDecoration(
                 color: jerseyColor,
                 borderRadius: BorderRadius.circular(6.r),
-                border: Border.all(color: AppColors.background, width: 2),
+                border: Border.all(color: context.colors.background, width: 2),
               ),
             ),
           ),
@@ -170,7 +172,7 @@ class _CategoryLabel extends StatelessWidget {
         style: GoogleFonts.jetBrainsMono(
           fontSize: 10.sp,
           letterSpacing: 1.2,
-          color: const Color(0xFF4a5a72),
+          color: context.colors.textSecondary,
         ),
       ),
     );
@@ -203,7 +205,7 @@ class _ColorSwatchRow extends StatelessWidget {
               shape: BoxShape.circle,
               color: colors[i],
               border: Border.all(
-                color: selected ? AppColors.steelLight : Colors.transparent,
+                color: selected ? context.colors.steelLight : Colors.transparent,
                 width: 2.5,
               ),
             ),
@@ -238,20 +240,20 @@ class _IconSwatchRow extends StatelessWidget {
             height: 36.r,
             decoration: BoxDecoration(
               color: selected
-                  ? AppColors.steel.withValues(alpha: 0.2)
-                  : AppColors.muted,
+                  ? context.colors.steel.withValues(alpha: 0.2)
+                  : context.colors.surfaceAlt,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(
                 color: selected
-                    ? AppColors.steelLight
-                    : AppColors.steel.withValues(alpha: 0.16),
+                    ? context.colors.steelLight
+                    : context.colors.steel.withValues(alpha: 0.16),
                 width: 1.5,
               ),
             ),
             child: Icon(
               icons[i],
               size: 16.sp,
-              color: selected ? AppColors.steelLight : AppColors.mutedForeground,
+              color: selected ? context.colors.steelLight : context.colors.textSecondary,
             ),
           ),
         );

@@ -96,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -115,14 +115,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Icon(
                           Icons.chevron_right,
                           size: 14.sp,
-                          color: const Color(0xFF4a5a72),
+                          color: context.colors.textSecondary,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           'Back',
-                          style: GoogleFonts.dmSans(
+                          style: GoogleFonts.poppins(
                             fontSize: 14.sp,
-                            color: const Color(0xFF4a5a72),
+                            color: context.colors.textSecondary,
                           ),
                         ),
                       ],
@@ -139,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           margin: EdgeInsets.symmetric(horizontal: 4.w),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2.r),
-                            color: filled ? AppColors.steel : AppColors.dim,
+                            color: filled ? context.colors.steel : context.colors.border,
                           ),
                         ),
                       );
@@ -150,10 +150,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 12.h),
                   Text(
                     'Create your\naccount',
-                    style: GoogleFonts.arimo(
+                    style: GoogleFonts.poppins(
                       fontSize: 32.sp,
                       fontWeight: FontWeight.w900,
-                      color: Colors.black,
+                      color: context.colors.textPrimary,
                       height: 1.0,
                       letterSpacing: 0.64,
                     ),
@@ -161,9 +161,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 4.h),
                   Text(
                     'Join your campus sports community',
-                    style: GoogleFonts.dmSans(
+                    style: GoogleFonts.poppins(
                       fontSize: 14.sp,
-                      color: AppColors.mutedForeground,
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ],
@@ -206,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Icon(
                         _showPass ? Icons.visibility_off : Icons.visibility,
                         size: 14.sp,
-                        color: const Color(0xFF4a5a72),
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   ),
@@ -217,10 +217,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Container(
                       padding: EdgeInsets.all(14.r),
                       decoration: BoxDecoration(
-                        color: AppColors.muted,
+                        color: context.colors.surfaceAlt,
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(
-                          color: AppColors.steel.withValues(alpha: 0.2),
+                          color: context.colors.steel.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Row(
@@ -232,13 +232,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             margin: EdgeInsets.only(top: 2.h),
                             decoration: BoxDecoration(
                               color: _locationConsent
-                                  ? AppColors.steel.withValues(alpha: 0.13)
+                                  ? context.colors.steel.withValues(alpha: 0.13)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(4.r),
                               border: Border.all(
                                 color: _locationConsent
-                                    ? AppColors.steel.withValues(alpha: 0.4)
-                                    : AppColors.steel.withValues(alpha: 0.2),
+                                    ? context.colors.steel.withValues(alpha: 0.4)
+                                    : context.colors.steel.withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                             ),
@@ -246,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ? Icon(
                                     Icons.check,
                                     size: 11.sp,
-                                    color: AppColors.steelLight,
+                                    color: context.colors.steelLight,
                                   )
                                 : null,
                           ),
@@ -257,19 +257,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               children: [
                                 Text(
                                   'Enable Location Sharing',
-                                  style: GoogleFonts.dmSans(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                    color: context.colors.textPrimary,
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
                                   'CourtU uses your location to show court activity. Only shared while the app is open.',
-                                  style: GoogleFonts.dmSans(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 11.sp,
                                     height: 1.4,
-                                    color: AppColors.mutedForeground,
+                                    color: context.colors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -291,19 +291,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Text.rich(
                     TextSpan(
                       text: 'By signing up you agree to our ',
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.poppins(
                         fontSize: 10.sp,
-                        color: const Color(0xFF4a5a72),
+                        color: context.colors.textSecondary,
                       ),
                       children: [
                         TextSpan(
                           text: 'Terms',
-                          style: TextStyle(color: AppColors.steelLight),
+                          style: TextStyle(color: context.colors.steelLight),
                         ),
                         const TextSpan(text: ' and '),
                         TextSpan(
                           text: 'Privacy Policy',
-                          style: TextStyle(color: AppColors.steelLight),
+                          style: TextStyle(color: context.colors.steelLight),
                         ),
                       ],
                     ),
@@ -314,9 +314,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Text.rich(
                     TextSpan(
                       text: 'Already have an account? ',
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.poppins(
                         fontSize: 12.sp,
-                        color: const Color(0xFF4a5a72),
+                        color: context.colors.textSecondary,
                       ),
                       children: [
                         WidgetSpan(
@@ -324,10 +324,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             onTap: widget.onSignIn,
                             child: Text(
                               'Sign in',
-                              style: GoogleFonts.dmSans(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.steelLight,
+                                color: context.colors.steelLight,
                               ),
                             ),
                           ),
@@ -366,7 +366,7 @@ class _GradientButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
-          color: AppColors.accentBlue.withValues(alpha: loading ? 0.6 : 1),
+          color: context.colors.accent.withValues(alpha: loading ? 0.6 : 1),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -383,7 +383,7 @@ class _GradientButton extends StatelessWidget {
             else ...[
               Text(
                 label,
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.poppins(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w900,
                   color: Colors.white,

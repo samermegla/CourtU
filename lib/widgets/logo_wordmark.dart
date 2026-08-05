@@ -36,14 +36,14 @@ class LogoWordmark extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'BarlowCondensed',
               fontWeight: FontWeight.w900,
-              color: Colors.black,
+              color: context.colors.textPrimary,
               fontSize: (size * 0.55).sp,
               letterSpacing: (0.05 * size * 0.55).sp,
             ),
             children: [
               TextSpan(
                 text: 'U',
-                style: TextStyle(color: AppColors.steelLight),
+                style: TextStyle(color: context.colors.steelLight),
               ),
             ],
           ),

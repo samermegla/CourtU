@@ -75,7 +75,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final canResend = _cooldown <= 0;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 28.w),
@@ -86,36 +86,36 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               Icon(
                 Icons.mark_email_unread_outlined,
                 size: 56.sp,
-                color: AppColors.steelLight,
+                color: context.colors.steelLight,
               ),
               SizedBox(height: 20.h),
               Text(
                 'Verify your email',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.arimo(
+                style: GoogleFonts.poppins(
                   fontSize: 30.sp,
                   fontWeight: FontWeight.w900,
-                  color: Colors.black,
+                  color: context.colors.textPrimary,
                 ),
               ),
               SizedBox(height: 10.h),
               Text(
                 'We sent a verification link to\n$email',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.dmSans(
+                style: GoogleFonts.poppins(
                   fontSize: 14.sp,
                   height: 1.5,
-                  color: AppColors.mutedForeground,
+                  color: context.colors.textSecondary,
                 ),
               ),
               SizedBox(height: 6.h),
               Text(
                 'Click the link, then come back here.\nCheck your spam folder if it\'s missing.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.dmSans(
+                style: GoogleFonts.poppins(
                   fontSize: 12.sp,
                   height: 1.5,
-                  color: const Color(0xFF4a5a72),
+                  color: context.colors.textSecondary,
                 ),
               ),
               SizedBox(height: 28.h),
@@ -128,7 +128,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       valueColor:
-                          AlwaysStoppedAnimation(AppColors.steelLight),
+                          AlwaysStoppedAnimation(context.colors.steelLight),
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -136,7 +136,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     'Waiting for verification…',
                     style: GoogleFonts.jetBrainsMono(
                       fontSize: 11.sp,
-                      color: const Color(0xFF4a5a72),
+                      color: context.colors.textSecondary,
                     ),
                   ),
                 ],
@@ -145,9 +145,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               OutlinedButton(
                 onPressed: canResend ? _resend : null,
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColors.muted,
+                  backgroundColor: context.colors.surfaceAlt,
                   side: BorderSide(
-                    color: AppColors.steel.withValues(alpha: 0.3),
+                    color: context.colors.steel.withValues(alpha: 0.3),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 14.h),
                   shape: RoundedRectangleBorder(
@@ -156,13 +156,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
                 child: Text(
                   canResend ? 'RESEND EMAIL' : 'RESEND IN ${_cooldown}s',
-                  style: GoogleFonts.barlowCondensed(
+                  style: GoogleFonts.poppins(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.8,
                     color: canResend
-                        ? AppColors.foreground
-                        : AppColors.mutedForeground,
+                        ? context.colors.textPrimary
+                        : context.colors.textSecondary,
                   ),
                 ),
               ),
@@ -171,9 +171,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 onPressed: _authService.signOut,
                 child: Text(
                   'Wrong email? Sign out',
-                  style: GoogleFonts.dmSans(
+                  style: GoogleFonts.poppins(
                     fontSize: 13.sp,
-                    color: AppColors.steelLight,
+                    color: context.colors.steelLight,
                   ),
                 ),
               ),

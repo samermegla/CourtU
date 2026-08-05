@@ -14,8 +14,13 @@ import 'screens/profile_setup/profile_setup_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/map_screen.dart';
 import 'services/auth_service.dart';
+import 'theme/app_theme.dart';
 import 'theme/colors.dart';
+import 'theme/theme_controller.dart';
 
+/// App-wide theme choice. Created once at startup and read by [CourtUApp] and
+/// the settings screen.
+final themeController = ThemeController();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +30,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Read the saved Light/Dark/System choice before the first frame so the app
+  // never flashes the wrong theme on launch.
+  await themeController.load();
   runApp(const CourtUApp());
 }
 
@@ -41,33 +49,33 @@ class CourtUApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          title: 'CourtU',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: AppColors.background,
-            colorScheme: const ColorScheme.light(
-              surface: AppColors.background,
-              primary: Color(0xFF4B6D8A),
-              secondary: Color(0xFF1ddf64),
-            ),
-          ),
-          // Clamp the OS text-scale so extreme accessibility font sizes can't
-          // push tightly-designed screens into overflow.
-          builder: (context, child) {
-            final mq = MediaQuery.of(context);
-            return MediaQuery(
-              data: mq.copyWith(
-                textScaler: mq.textScaler.clamp(
-                  minScaleFactor: 1.0,
-                  maxScaleFactor: 1.2,
+        // Rebuilds the whole app whenever the theme choice changes, so
+        // switching applies immediately without a restart.
+        return AnimatedBuilder(
+          animation: themeController,
+          builder: (context, _) => MaterialApp(
+            title: 'CourtU',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            // `system` follows the phone's own light/dark setting.
+            themeMode: themeController.mode,
+            // Clamp the OS text-scale so extreme accessibility font sizes can't
+            // push tightly-designed screens into overflow.
+            builder: (context, child) {
+              final mq = MediaQuery.of(context);
+              return MediaQuery(
+                data: mq.copyWith(
+                  textScaler: mq.textScaler.clamp(
+                    minScaleFactor: 1.0,
+                    maxScaleFactor: 1.2,
+                  ),
                 ),
-              ),
-              child: child!,
-            );
-          },
-          home: AuthGate(),
+                child: child!,
+              );
+            },
+            home: AuthGate(),
+          ),
         );
       },
     );
@@ -110,9 +118,9 @@ class _AuthGateState extends State<AuthGate> {
       builder: (context, snapshot) {
         // Firebase is still restoring the persisted session from disk.
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: AppColors.background,
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: context.colors.background,
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
         final user = snapshot.data;

@@ -25,10 +25,10 @@ class CompetitivenessStep extends StatelessWidget {
         Text(
           'How competitive\nare you?',
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
+          style: GoogleFonts.poppins(
             fontSize: 32.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            color: context.colors.textPrimary,
             height: 1.0,
             letterSpacing: 0.64,
           ),
@@ -47,13 +47,13 @@ class CompetitivenessStep extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.steel.withValues(alpha: 0.2)
-                      : AppColors.muted,
+                      ? context.colors.steel.withValues(alpha: 0.2)
+                      : context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
                     color: isSelected
-                        ? AppColors.steelLight
-                        : AppColors.steel.withValues(alpha: 0.16),
+                        ? context.colors.steelLight
+                        : context.colors.steel.withValues(alpha: 0.16),
                     width: 1.5,
                   ),
                 ),
@@ -62,12 +62,12 @@ class CompetitivenessStep extends StatelessWidget {
                     Expanded(
                       child: Text(
                         level,
-                        style: GoogleFonts.dmSans(
+                        style: GoogleFonts.poppins(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w600,
                           color: isSelected
-                              ? AppColors.steelLight
-                              : Colors.white,
+                              ? context.colors.steelLight
+                              : context.colors.textPrimary,
                         ),
                       ),
                     ),
@@ -75,7 +75,7 @@ class CompetitivenessStep extends StatelessWidget {
                       Icon(
                         Icons.check_circle,
                         size: 18.sp,
-                        color: AppColors.steelLight,
+                        color: context.colors.steelLight,
                       ),
                   ],
                 ),

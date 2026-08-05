@@ -107,14 +107,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _showInfo(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: AppColors.steel),
+      SnackBar(content: Text(message), backgroundColor: context.colors.steel),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -133,14 +133,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         Icon(
                           Icons.chevron_right,
                           size: 14.sp,
-                          color: const Color(0xFF4a5a72),
+                          color: context.colors.textSecondary,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           'Back',
-                          style: GoogleFonts.dmSans(
+                          style: GoogleFonts.poppins(
                             fontSize: 14.sp,
-                            color: const Color(0xFF4a5a72),
+                            color: context.colors.textSecondary,
                           ),
                         ),
                       ],
@@ -154,10 +154,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: 44.r,
                         height: 44.r,
                         decoration: BoxDecoration(
-                          color: AppColors.muted,
+                          color: context.colors.surfaceAlt,
                           borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color: AppColors.steel.withValues(alpha: 0.33),
+                            color: context.colors.steel.withValues(alpha: 0.33),
                           ),
                         ),
                         alignment: Alignment.center,
@@ -169,10 +169,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           Text(
                             'Welcome back',
-                            style: GoogleFonts.arimo(
+                            style: GoogleFonts.poppins(
                               fontSize: 30.sp,
                               fontWeight: FontWeight.w900,
-                              color: Colors.black,
+                              color: context.colors.textPrimary,
                               height: 1.0,
                               letterSpacing: 0.9,
                             ),
@@ -180,14 +180,14 @@ class _SignInScreenState extends State<SignInScreen> {
                           Text.rich(
                             TextSpan(
                               text: 'Sign in to Court',
-                              style: GoogleFonts.dmSans(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
-                                color: AppColors.mutedForeground,
+                                color: context.colors.textSecondary,
                               ),
                               children: [
                                 TextSpan(
                                   text: 'U',
-                                  style: TextStyle(color: AppColors.steelLight),
+                                  style: TextStyle(color: context.colors.steelLight),
                                 ),
                               ],
                             ),
@@ -232,7 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Icon(
                         _showPass ? Icons.visibility_off : Icons.visibility,
                         size: 14.sp,
-                        color: const Color(0xFF4a5a72),
+                        color: context.colors.textSecondary,
                       ),
                     ),
                   ),
@@ -250,8 +250,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           color: _isSendingReset
-                              ? AppColors.mutedForeground
-                              : AppColors.steelLight,
+                              ? context.colors.textSecondary
+                              : context.colors.steelLight,
                         ),
                       ),
                     ),
@@ -291,16 +291,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       label: Text(
                         'Continue with University SSO',
-                        style: GoogleFonts.dmSans(
+                        style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.foreground,
+                          color: context.colors.textPrimary,
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: AppColors.muted,
+                        backgroundColor: context.colors.surfaceAlt,
                         side: BorderSide(
-                          color: AppColors.steel.withValues(alpha: 0.2),
+                          color: context.colors.steel.withValues(alpha: 0.2),
                         ),
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(
@@ -314,9 +314,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   Text.rich(
                     TextSpan(
                       text: "Don't have an account? ",
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.poppins(
                         fontSize: 12.sp,
-                        color: const Color(0xFF4a5a72),
+                        color: context.colors.textSecondary,
                       ),
                       children: [
                         WidgetSpan(
@@ -324,10 +324,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             onTap: widget.onSignUp,
                             child: Text(
                               'Sign up',
-                              style: GoogleFonts.dmSans(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.steelLight,
+                                color: context.colors.steelLight,
                               ),
                             ),
                           ),
@@ -357,7 +357,7 @@ class _FieldLabel extends StatelessWidget {
       style: GoogleFonts.jetBrainsMono(
         fontSize: 11.sp,
         letterSpacing: 1,
-        color: const Color(0xFF4a5a72),
+        color: context.colors.textSecondary,
       ),
     );
   }
@@ -369,7 +369,7 @@ class _OrDivider extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
+          child: Container(height: 1, color: context.colors.steel.withValues(alpha: 0.16)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -378,12 +378,12 @@ class _OrDivider extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
               fontSize: 10.sp,
               letterSpacing: 2,
-              color: const Color(0xFF4a5a72),
+              color: context.colors.textSecondary,
             ),
           ),
         ),
         Expanded(
-          child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
+          child: Container(height: 1, color: context.colors.steel.withValues(alpha: 0.16)),
         ),
       ],
     );
@@ -414,8 +414,8 @@ class _GradientButton extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.steel.withValues(alpha: loading ? 0.6 : 1),
-              AppColors.steelLight.withValues(alpha: loading ? 0.6 : 1),
+              context.colors.steel.withValues(alpha: loading ? 0.6 : 1),
+              context.colors.steelLight.withValues(alpha: loading ? 0.6 : 1),
             ],
           ),
         ),
@@ -434,7 +434,7 @@ class _GradientButton extends StatelessWidget {
             else ...[
               Text(
                 label,
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.poppins(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w900,
                   color: Colors.white,

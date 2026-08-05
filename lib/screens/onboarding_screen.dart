@@ -31,7 +31,9 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _step = 0;
 
-  static final _slides = [
+  // Built per-frame rather than held as a static, because the decorative
+  // float widgets inside carry themed colors that change with light/dark.
+  List<_SlideData> _slidesFor(BuildContext context) => [
     _SlideData(
       tag: 'real-time map',
       emoji: '🗺️',
@@ -64,10 +66,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: AppColors.steel.withValues(alpha: 0.27),
+                color: context.colors.steel.withValues(alpha: 0.27),
               ),
             ),
             child: Row(
@@ -88,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     fontSize: 10.sp,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
-                    color: AppColors.steelLight,
+                    color: context.colors.steelLight,
                   ),
                 ),
               ],
@@ -110,10 +112,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: AppColors.card,
+              color: context.colors.surface,
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: AppColors.steel.withValues(alpha: 0.27),
+                color: context.colors.steel.withValues(alpha: 0.27),
               ),
             ),
             child: Column(
@@ -125,15 +127,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: GoogleFonts.jetBrainsMono(
                     fontSize: 9.sp,
                     letterSpacing: 1.2,
-                    color: const Color(0xFF4a5a72),
+                    color: context.colors.textSecondary,
                   ),
                 ),
                 Text(
                   "I'M GOING!",
-                  style: GoogleFonts.barlowCondensed(
+                  style: GoogleFonts.poppins(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.steelLight,
+                    color: context.colors.steelLight,
                   ),
                 ),
               ],
@@ -144,14 +146,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
   ];
 
-  bool get _isLastStep => _step == _slides.length - 1;
+  static const _slideCount = 3;
+
+  bool get _isLastStep => _step == _slideCount - 1;
 
   @override
   Widget build(BuildContext context) {
-    final slide = _slides[_step];
+    final slide = _slidesFor(context)[_step];
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -213,7 +217,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // ── Bottom buttons (always visible) ──
             _BottomButtons(
               isLastStep: _isLastStep,
-              stepCount: _slides.length,
+              stepCount: _slideCount,
               activeStep: _step,
               onNext: () => setState(() => _step++),
               onGetStarted: widget.onGetStarted,
@@ -255,7 +259,7 @@ class _TopBar extends StatelessWidget {
               'SKIP →',
               style: GoogleFonts.jetBrainsMono(
                 fontSize: 11.sp,
-                color: const Color(0xFF4a5a72),
+                color: context.colors.textSecondary,
               ),
             ),
           ),
@@ -280,10 +284,10 @@ class _TagPill extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.steel.withValues(alpha: 0.09),
+        color: context.colors.steel.withValues(alpha: 0.09),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: AppColors.steel.withValues(alpha: 0.27),
+          color: context.colors.steel.withValues(alpha: 0.27),
         ),
       ),
       child: Row(
@@ -301,7 +305,7 @@ class _TagPill extends StatelessWidget {
                       ? Colors.green
                       : label == 'customize'
                           ? Colors.blue
-                          : AppColors.steelLight,
+                          : context.colors.steelLight,
             ),
           ),
           SizedBox(width: 6.w),
@@ -310,7 +314,7 @@ class _TagPill extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
               fontSize: 10.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: context.colors.textPrimary,
               letterSpacing: 1,
             ),
           ),
@@ -356,17 +360,17 @@ class _EmojiCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.steel.withValues(alpha: 0.08),
-                  AppColors.steel.withValues(alpha: 0.08),
+                  context.colors.steel.withValues(alpha: 0.08),
+                  context.colors.steel.withValues(alpha: 0.08),
                 ],
               ),
               border: Border.all(
-                color: AppColors.steel.withValues(alpha: 0.27),
+                color: context.colors.steel.withValues(alpha: 0.27),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.steel.withValues(alpha: 0.45),
+                  color: context.colors.steel.withValues(alpha: 0.45),
                   blurRadius: 40.r,
                   spreadRadius: 6.4.r,
                 ),
@@ -423,10 +427,10 @@ class _SlideText extends StatelessWidget {
         Text(
           headline,
           textAlign: TextAlign.center,
-          style: GoogleFonts.arimo(
+          style: GoogleFonts.poppins(
             fontSize: 38.sp,
             fontWeight: FontWeight.w900,
-            color: Colors.black,
+            color: context.colors.textPrimary,
             height: 0.92,
             letterSpacing: 0.38,
           ),
@@ -439,7 +443,7 @@ class _SlideText extends StatelessWidget {
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 14.sp,
-              color: AppColors.mutedForeground,
+              color: context.colors.textSecondary,
               height: 1.6,
             ),
           ),
@@ -512,10 +516,10 @@ class _BottomButtons extends StatelessWidget {
               ),
               child: Text(
                 'ALREADY HAVE AN ACCOUNT',
-                style: GoogleFonts.barlowCondensed(
+                style: GoogleFonts.poppins(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.mutedForeground,
+                  color: context.colors.textSecondary,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -561,10 +565,10 @@ class _FloatBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.steel.withValues(alpha: 0.13),
+        color: context.colors.steel.withValues(alpha: 0.13),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: AppColors.steel.withValues(alpha: 0.33),
+          color: context.colors.steel.withValues(alpha: 0.33),
         ),
       ),
       child: Text(
@@ -572,7 +576,7 @@ class _FloatBadge extends StatelessWidget {
         style: GoogleFonts.jetBrainsMono(
           fontSize: 10.sp,
           fontWeight: FontWeight.bold,
-          color: AppColors.steelLight,
+          color: context.colors.steelLight,
         ),
       ),
     );

@@ -20,9 +20,9 @@ class SSOBlock extends StatelessWidget {
       children: [
         _googleButton(),
         SizedBox(height: 10.h),
-        _universityButton(),
+        _universityButton(context),
         SizedBox(height: 16.h),
-        _divider(),
+        _divider(context),
       ],
     );
   }
@@ -48,7 +48,7 @@ class SSOBlock extends StatelessWidget {
             SizedBox(width: 10.w),
             Text(
               'Continue with Google',
-              style: GoogleFonts.dmSans(
+              style: GoogleFonts.poppins(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -59,23 +59,23 @@ class SSOBlock extends StatelessWidget {
     );
   }
 
-  Widget _universityButton() {
+  Widget _universityButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: onUniversitySSO,
-        icon: Icon(Icons.school, size: 15.sp, color: AppColors.mutedForeground),
+        icon: Icon(Icons.school, size: 15.sp, color: context.colors.textSecondary),
         label: Text(
           'University SSO',
-          style: GoogleFonts.dmSans(
+          style: GoogleFonts.poppins(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: AppColors.mutedForeground,
+            color: context.colors.textSecondary,
           ),
         ),
         style: OutlinedButton.styleFrom(
-          backgroundColor: AppColors.muted,
-          side: BorderSide(color: AppColors.steel.withValues(alpha: 0.2)),
+          backgroundColor: context.colors.surfaceAlt,
+          side: BorderSide(color: context.colors.steel.withValues(alpha: 0.2)),
           padding: EdgeInsets.symmetric(vertical: 14.h),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
@@ -85,11 +85,11 @@ class SSOBlock extends StatelessWidget {
     );
   }
 
-  Widget _divider() {
+  Widget _divider(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
+          child: Container(height: 1, color: context.colors.steel.withValues(alpha: 0.16)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -98,12 +98,12 @@ class SSOBlock extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
               fontSize: 10.sp,
               letterSpacing: 2,
-              color: const Color(0xFF4a5a72),
+              color: context.colors.textSecondary,
             ),
           ),
         ),
         Expanded(
-          child: Container(height: 1, color: AppColors.steel.withValues(alpha: 0.16)),
+          child: Container(height: 1, color: context.colors.steel.withValues(alpha: 0.16)),
         ),
       ],
     );

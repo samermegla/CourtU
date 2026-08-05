@@ -11,10 +11,18 @@ map with check-ins. Deadline: Aug 24, 2026 (first day of UTD fall semester).
   without an explicit approved plan.
 - **Mapbox Maps SDK** via `mapbox_maps_flutter` — the *Maps* SDK only.
   NEVER add the Mapbox Navigation SDK; turn-by-turn is out of scope.
-- Fonts via google_fonts: barlowCondensed (headlines, w900),
-  dmSans (body), jetBrainsMono (tags/labels/counts).
-- Colors: `lib/theme/colors.dart` (`AppColors`). Never hardcode hex values
-  in screens; add to AppColors if a new color is truly needed.
+- Fonts via google_fonts: **Poppins** for headlines and body,
+  **jetBrainsMono** for tags/labels/counts (fixed-width, so live-updating
+  digits don't jitter). Defined once in `lib/theme/app_theme.dart` —
+  change the font there, not in screens. (Replaced the old
+  barlowCondensed/dmSans/arimo mix in Aug 2026.)
+- Colors: light and dark palettes live in `lib/theme/colors.dart`.
+  Screens read the current mode's colors via `context.colors.<slot>`
+  (background, surface, surfaceAlt, border, textPrimary, textSecondary,
+  accent, steel, steelLight) — NEVER `Colors.black`/`Colors.white`/hex
+  literals, which don't switch with the theme.
+  `AppColors.*` is only for values identical in both modes (brand, status,
+  sport). Its legacy block is for three dead files; do not use it in new code.
 
 ## Branch rules — non-negotiable
 - **NEVER commit or push to `main`.** Samer owns main and reviews PRs.

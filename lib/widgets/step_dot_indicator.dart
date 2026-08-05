@@ -30,7 +30,7 @@ class StepDotIndicator extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3.r),
-            color: isActive ? AppColors.steel : AppColors.dim,
+            color: isActive ? context.colors.steel : context.colors.border,
           ),
         );
         if (onTap == null) return dot;
