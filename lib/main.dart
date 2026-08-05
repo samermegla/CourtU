@@ -177,6 +177,7 @@ class _AppFlowState extends State<_AppFlow> {
         return SignUpScreen(
           onBack: () => _goTo('onboarding'),
           onCreateAccount: () {},
+          onSignIn: () => _goTo('signin'),
         );
       case 'signin':
         return SignInScreen(

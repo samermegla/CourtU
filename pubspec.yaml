@@ -40,7 +40,11 @@ dependencies:
   flutter_screenutil: ^5.9.0
   google_fonts: ^6.2.1
   google_sign_in: ^7.2.0
-  mapbox_maps_flutter: ^2.26.0
+  cloud_firestore: ^6.7.1
+  # Pinned exactly (no caret): the Kotlin workaround in android/build.gradle.kts
+  # is written against 2.27.0 specifically, so the resolver must not drift.
+  mapbox_maps_flutter: 2.27.0
+  geolocator: ^14.0.3
 
 dev_dependencies:
   flutter_test:
