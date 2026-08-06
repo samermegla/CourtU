@@ -8,8 +8,7 @@ import '../services/firestore_service.dart';
 import '../services/auth_service.dart';
 import 'welcome_screen.dart';
 
-/// Palette choices for the player puck. Colors are persisted as ARGB ints and
-/// the hat as its [HatOption.id]; the map later rebuilds the avatar from these.
+//Skin tones
 const List<Color> skinTones = [
   Color(0xFFF8D5C2),
   Color(0xFFF0C0A0),
@@ -30,7 +29,6 @@ const List<Color> jerseyColors = [
   Colors.white,
 ];
 
-/// A hat the user can put on their puck. An empty [emoji] means "no hat".
 class HatOption {
   final String id;
   final String emoji;
@@ -47,8 +45,7 @@ const List<HatOption> hats = [
   HatOption('grad', '🎓', 'Grad'),
 ];
 
-/// Volleyball positions offered on the third onboarding slide. The label is
-/// also what we persist to the profile.
+
 const List<String> positions = [
   'Outside Hitter',
   'Middle Blocker',
@@ -58,18 +55,13 @@ const List<String> positions = [
   'Not sure yet',
 ];
 
-/// How competitive the player is, offered on the fourth onboarding slide. The
-/// label is also what we persist to the profile.
 const List<String> competitiveLevels = [
   'Just for fun',
   'Balanced',
   'Highly competitive',
 ];
 
-/// Onboards a freshly signed-up user across two slides: first their name, then
-/// a "make it yours" slide to build their circular map puck (skin, jersey, and
-/// hat). The AuthGate routes here whenever a verified account has no display
-/// name yet, so this is the last stop before the map.
+
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
 
@@ -82,18 +74,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _nameController = TextEditingController(); //holds the username
   final _authService = AuthService();
 
-  // 0 = name, 1 = "make it yours", 2 = position, 3 = competitiveness.
   int _step = 0;
 
-  // The player puck being built.
   Color _skin = skinTones[1];
   Color _jersey = jerseyColors[0];
   String _hat = hats.first.id;
 
-  // Chosen volleyball position (null until they pick one).
   String? _position;
 
-  // Chosen competitiveness level (null until they pick one).
   String? _competitiveness;
 
   bool _isLoading = false;
@@ -236,14 +224,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               height: 1.0,
               letterSpacing: 0.64,
             ),
-          ),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          'This is the name your teammates will see.',
-          style: GoogleFonts.dmSans(
-            fontSize: 14.sp,
-            color: AppColors.mutedForeground,
           ),
         ),
         SizedBox(height: 28.h),

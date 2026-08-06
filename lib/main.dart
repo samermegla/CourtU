@@ -9,7 +9,7 @@ import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/signin_screen.dart';
-import 'screens/map_screen.dart';
+import 'screens/main_shell.dart';
 import 'screens/verify_email_screen.dart';
 import 'screens/user_profile.dart';
 import 'services/auth_service.dart';
@@ -108,7 +108,7 @@ class AuthGate extends StatelessWidget {
         if (displayName.isEmpty) {
           return const UserProfileScreen();
         }
-        return const MapScreen();
+        return const MainShell();
       },
     );
   }
