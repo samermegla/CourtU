@@ -55,13 +55,6 @@ const List<String> positions = [
   'Not sure yet',
 ];
 
-const List<String> competitiveLevels = [
-  'Just for fun',
-  'Balanced',
-  'Highly competitive',
-];
-
-
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
 
@@ -81,8 +74,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   String _hat = hats.first.id;
 
   String? _position;
-
-  String? _competitiveness;
 
   bool _isLoading = false;
 
@@ -112,12 +103,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   // Step 1 → step 2. The puck is held in state until the final save.
   void _handlePuckContinue() => setState(() => _step = 2);
 
-  // Step 2 → step 3.
-  void _handlePositionContinue() => setState(() => _step = 3);
-
-  // Step 3 → welcome transition. Persists the whole profile (name + puck +
-  // position + competitiveness), then hands off to the greeting, which saves
-  // the display name when done.
+  // Step 2 → welcome transition. Persists the whole profile (name + puck +
+  // position), then hands off to the greeting, which saves the display name
+  // when done.
   Future<void> _handleFinish() async {
     final name = _nameController.text.trim();
     setState(() => _isLoading = true);
@@ -134,7 +122,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           jerseyColor: _jersey.toARGB32(),
           hat: _hat,
           position: _position,
-          competitiveness: _competitiveness,
         );
       }
 
@@ -196,8 +183,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             child: switch (_step) {
               0 => _buildNameStep(),
               1 => _buildPuckStep(),
-              2 => _buildPositionStep(),
-              _ => _buildCompetitiveStep(),
+              _ => _buildPositionStep(),
             },
           ),
         ),
@@ -384,63 +370,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         _GradientButton(
-          label: 'CONTINUE',
-          // Require a choice before advancing.
-          onTap: _position == null ? null : _handlePositionContinue,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCompetitiveStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(height: 12.h),
-        _backHeader(),
-        SizedBox(height: 20.h),
-        Text(
-          'how competitive are you?',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.barlowCondensed(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-            height: 1.0,
-            letterSpacing: 0.64,
-          ),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          'This helps us match you with the right games.',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.dmSans(
-            fontSize: 14.sp,
-            color: AppColors.mutedForeground,
-          ),
-        ),
-        SizedBox(height: 24.h),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final level in competitiveLevels) ...[
-                  _ChoiceRow(
-                    label: level,
-                    selected: level == _competitiveness,
-                    onTap: () => setState(() => _competitiveness = level),
-                  ),
-                  SizedBox(height: 12.h),
-                ],
-              ],
-            ),
-          ),
-        ),
-        _GradientButton(
           label: _isLoading ? 'SAVING...' : 'CONTINUE',
           // Require a choice before finishing.
-          onTap: (_isLoading || _competitiveness == null) ? null : _handleFinish,
+          onTap: (_isLoading || _position == null) ? null : _handleFinish,
           loading: _isLoading,
         ),
       ],
