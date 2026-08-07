@@ -44,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _FloatData(
           top: 24,
           right: 11,
-          child: _FloatBadge(text: '🔥 PACKED!!'),
+          child: _FloatBadge(text: '🔥 2 SPOTS LEFT!'),
         ),
         _FloatData(
           bottom: 25,
