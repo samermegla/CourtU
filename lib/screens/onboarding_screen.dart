@@ -35,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // float widgets inside carry themed colors that change with light/dark.
   List<_SlideData> _slidesFor(BuildContext context) => [
     _SlideData(
-      tag: 'real-time map',
+      tag: 'LIVE',
       emoji: '🗺️',
       emojiFontSize: 104.55,
       headline: 'Your courts.\nReal time.',
@@ -299,7 +299,7 @@ class _TagPill extends StatelessWidget {
             height: 6.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: label == 'real-time map'
+              color: label == 'LIVE'
                   ? Colors.red
                   : label == 'connect'
                       ? Colors.green
