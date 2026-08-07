@@ -134,6 +134,15 @@ if something environment-shaped breaks on one machine and not the other:
   install — `JAVA_HOME` isn't set as a system/user env var on the laptop)
 - Android SDK: platform-tools 37.0.0, build-tools 36.0.0, platforms
   34/35/36/36.1
+- `JAVA_HOME`, `ANDROID_HOME`, and `ANDROID_SDK_ROOT` are all unset on the
+  laptop. `flutter run` doesn't need them — Flutter finds Android Studio's
+  bundled JDK on its own — but a raw `gradlew`/`gradlew.bat` command (e.g.
+  to run a single Gradle task directly) needs `JAVA_HOME` set first in
+  that terminal:
+  ```
+  $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+  ```
+  Same fix already documented for fresh terminals on the PC.
 
 ## Working style (Pablo is non-technical)
 - Explain every technical decision in plain language, with a one-sentence
