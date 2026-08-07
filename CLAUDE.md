@@ -125,6 +125,16 @@ multiple screens — those are the files worth a closer look in review.
   not worth it for a visual check. Not fixed as of Aug 2026; has cost
   verification time twice already.
 
+## Known-good toolchain
+Confirmed working on Pablo's **laptop** (Aug 2026) — the desk **PC**'s
+versions aren't yet confirmed to match, so check before assuming parity
+if something environment-shaped breaks on one machine and not the other:
+- Flutter 3.44.8 (stable channel), Dart 3.12.2
+- Java: OpenJDK 21.0.10 (Android Studio's bundled `jbr`, not a separate
+  install — `JAVA_HOME` isn't set as a system/user env var on the laptop)
+- Android SDK: platform-tools 37.0.0, build-tools 36.0.0, platforms
+  34/35/36/36.1
+
 ## Working style (Pablo is non-technical)
 - Explain every technical decision in plain language, with a one-sentence
   translation of any jargon, BEFORE implementing.
