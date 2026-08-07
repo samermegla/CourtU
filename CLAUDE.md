@@ -112,6 +112,18 @@ multiple screens — those are the files worth a closer look in review.
   `compileDebugKotlin` breaks again and the narrow cache fix above doesn't
   resolve it, this version mismatch is the next thing to look at —
   requires an actual config change, so don't touch it without a plan.
+- No way to reach signed-in screens (map, settings, gear icon) during
+  manual/agent verification without a live account: there's no Firebase
+  emulator hookup (`auth_service.dart` talks straight to the real Firebase
+  project), and the dev-only "replay onboarding" button in
+  `settings_screen.dart` only works by signing out — see the
+  `_DevResetTile` doc comment there for the deferred "replay without
+  signing out" task this is paired with. Signing up a throwaway account to
+  get past this writes real documents via `createProfile()`
+  (`firestore_service.dart`), whose schema is still unsettled with Samer
+  and which uses `.set()` without `merge`, so it overwrites whole docs —
+  not worth it for a visual check. Not fixed as of Aug 2026; has cost
+  verification time twice already.
 
 ## Working style (Pablo is non-technical)
 - Explain every technical decision in plain language, with a one-sentence
