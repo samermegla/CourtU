@@ -124,6 +124,20 @@ multiple screens — those are the files worth a closer look in review.
   and which uses `.set()` without `merge`, so it overwrites whole docs —
   not worth it for a visual check. Not fixed as of Aug 2026; has cost
   verification time twice already.
+- Orphaned files — kept on disk, not deleted, so Samer's branch review
+  doesn't have to reason about deletions on top of an already-open schema
+  conversation:
+  - `lib/screens/profile_setup/steps/competitiveness_step.dart` — no
+    longer called by `profile_setup_screen.dart` as of the Aug 2026
+    two-step redesign (competitiveness was cut from Profile Setup
+    entirely). Safe to delete once nobody minds losing it from the diff.
+  - `lib/screens/user_profile.dart` — already dead before Aug 2026 (see
+    the legacy `AppColors` comment in `colors.dart`), and has now caused
+    two wrong-file mixups for whoever's reading it fresh: once over
+    displayName/username naming, once over a hat picker that only exists
+    in this file and not in the live Profile Setup flow. It's actively
+    costing accuracy, not just disk space. Flag as a delete candidate
+    once Samer confirms nothing of his depends on it.
 
 ## Known-good toolchain
 Confirmed working on Pablo's **laptop** (Aug 2026) — the desk **PC**'s
