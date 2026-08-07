@@ -86,6 +86,32 @@ multiple screens — those are the files worth a closer look in review.
   (Downloads:Read scope) in gradle.properties — see docs/ROADMAP.md.
 - iOS builds happen ONLY on Samer's Mac. Nothing iOS-build-related on
   this Windows machine.
+- If a build fails with "Unresolved reference" errors inside
+  `mapbox_maps_flutter`'s own Kotlin source (e.g. `MapboxMapController.kt`
+  can't resolve `CameraController`/`CompassController`/`ViewportController`,
+  which sit right next to it in the same package), delete
+  `build/mapbox_maps_flutter/` only — not the whole `build/` tree, not
+  `.gradle`, not the pub cache — then rebuild. This is a stale incremental
+  Kotlin compile cache, not a real version/config problem: pub occasionally
+  re-extracts the plugin into the pub cache (all its source files get a
+  fresh mtime) without changing the resolved version, and the incremental
+  compiler's old bookkeeping (from the previous extraction) gets out of
+  sync with the "new" files, so it doesn't recompile everything it needs
+  to. Confirmed Aug 2026: plugin source mtimes matched the moment
+  `.dart_tool/package_config.json` was last regenerated, while
+  `build/mapbox_maps_flutter/kotlin/compileDebugKotlin` was ~3 weeks
+  stale; deleting just that folder fixed it without touching pubspec.yaml,
+  build.gradle.kts, or the pin.
+- Known oddity, not currently a problem: `mapbox_maps_flutter` 2.27.0's
+  own `android/build.gradle` declares `kotlin_version = '1.8.22'` and adds
+  its own `kotlin-gradle-plugin:1.8.22` classpath, while the root
+  `android/settings.gradle.kts` applies `org.jetbrains.kotlin.android`
+  version `2.3.20`. Two different Kotlin plugin versions are in play for
+  the same subproject. Ruled out as the cause of the Aug 2026 build
+  failure (see above — that was the stale cache), but if
+  `compileDebugKotlin` breaks again and the narrow cache fix above doesn't
+  resolve it, this version mismatch is the next thing to look at —
+  requires an actual config change, so don't touch it without a plan.
 
 ## Working style (Pablo is non-technical)
 - Explain every technical decision in plain language, with a one-sentence
