@@ -5,7 +5,7 @@ import '../../../theme/colors.dart';
 
 // TODO: replace this placeholder tone list with real illustrated skin-tone
 // swatches once avatar art assets exist.
-const _skinTones = [
+const skinTones = [
   Color(0xFFffdbac),
   Color(0xFFf1c27d),
   Color(0xFFe0ac69),
@@ -16,7 +16,7 @@ const _skinTones = [
 
 // TODO: these generic icons stand in for real illustrated hairstyle art.
 // Swap each entry for a proper hairstyle asset later.
-const _hairstyleIcons = [
+const hairstyleIcons = [
   Icons.horizontal_rule, // "shaved"
   Icons.crop_square, // "buzz cut"
   Icons.change_history, // "spiky"
@@ -26,7 +26,7 @@ const _hairstyleIcons = [
 
 // TODO: replace with real jersey-color art / fabric swatches later. Reuses
 // the app's existing sport colors so it doesn't invent a new palette.
-const _jerseyColors = [
+const jerseyColors = [
   AppColors.volleyball,
   AppColors.basketball,
   AppColors.tennis,
@@ -37,9 +37,13 @@ const _jerseyColors = [
   Color(0xFF6B9AB8),
 ];
 
-/// Step 2: mix-and-match avatar builder. No illustrated art exists yet, so
-/// every option here is a plain shape/color placeholder — see the TODOs
-/// above and inline below for where real assets should be swapped in.
+/// Mix-and-match avatar builder. Not part of the active Profile Setup flow
+/// as of the two-step redesign (Aug 2026) -- [ProfileSetupScreen] no longer
+/// builds this widget, but the constants above are kept public so a future
+/// Settings customization screen can reuse them instead of duplicating.
+/// No illustrated art exists yet, so every option here is a plain
+/// shape/color placeholder — see the TODOs above and inline below for
+/// where real assets should be swapped in.
 class AvatarStep extends StatelessWidget {
   final int skinToneIndex;
   final int hairstyleIndex;
@@ -76,15 +80,15 @@ class AvatarStep extends StatelessWidget {
         ),
         SizedBox(height: 20.h),
         _AvatarPreview(
-          skinTone: _skinTones[skinToneIndex],
-          hairstyleIcon: _hairstyleIcons[hairstyleIndex],
-          jerseyColor: _jerseyColors[jerseyColorIndex],
+          skinTone: skinTones[skinToneIndex],
+          hairstyleIcon: hairstyleIcons[hairstyleIndex],
+          jerseyColor: jerseyColors[jerseyColorIndex],
         ),
         SizedBox(height: 24.h),
         _CategoryLabel('SKIN TONE'),
         SizedBox(height: 10.h),
         _ColorSwatchRow(
-          colors: _skinTones,
+          colors: skinTones,
           selectedIndex: skinToneIndex,
           onTap: onSkinToneChanged,
         ),
@@ -92,7 +96,7 @@ class AvatarStep extends StatelessWidget {
         _CategoryLabel('HAIRSTYLE'),
         SizedBox(height: 10.h),
         _IconSwatchRow(
-          icons: _hairstyleIcons,
+          icons: hairstyleIcons,
           selectedIndex: hairstyleIndex,
           onTap: onHairstyleChanged,
         ),
@@ -100,7 +104,7 @@ class AvatarStep extends StatelessWidget {
         _CategoryLabel('JERSEY COLOR'),
         SizedBox(height: 10.h),
         _ColorSwatchRow(
-          colors: _jerseyColors,
+          colors: jerseyColors,
           selectedIndex: jerseyColorIndex,
           onTap: onJerseyColorChanged,
         ),

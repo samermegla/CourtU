@@ -5,17 +5,16 @@ import '../../theme/colors.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/step_dot_indicator.dart';
 import 'profile_setup_data.dart';
-import 'steps/avatar_step.dart';
-import 'steps/competitiveness_step.dart';
-import 'steps/experience_step.dart';
+import 'steps/details_step.dart';
 import 'steps/nickname_step.dart';
-import 'steps/position_step.dart';
 
-const _stepCount = 5;
+const _stepCount = 2;
 
-/// A short, one-question-per-screen flow (nickname, avatar, positions,
-/// experience, competitiveness) shown once right after a new account is
-/// created and verified, before the user ever reaches [HomeScreen].
+/// A short, one-question-per-screen flow shown once right after a new
+/// account is created and verified, before the user ever reaches
+/// [HomeScreen]: nickname alone, then everything else (positions,
+/// experience, court type) on one page. Avatar customization and
+/// competitiveness were cut in the Aug 2026 redesign -- see CLAUDE.md.
 ///
 /// Reuses the onboarding flow's visual language: [GradientButton],
 /// [StepDotIndicator], and the same AppColors/GoogleFonts split.
@@ -37,13 +36,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       case 0:
         return _data.nickname.trim().isNotEmpty;
       case 1:
-        return true; // avatar always has a valid default selection
-      case 2:
+        // Only positions are required -- experience and court type are
+        // preferences, not identity, and always have a value regardless.
         return _data.positions.isNotEmpty;
-      case 3:
-        return _data.experience != null;
-      case 4:
-        return _data.competitiveness != null;
       default:
         return false;
     }
@@ -72,37 +67,25 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           onChanged: (v) => setState(() => _data.nickname = v),
         );
       case 1:
-        return AvatarStep(
-          key: const ValueKey('avatar'),
-          skinToneIndex: _data.skinToneIndex,
-          hairstyleIndex: _data.hairstyleIndex,
-          jerseyColorIndex: _data.jerseyColorIndex,
-          onSkinToneChanged: (i) => setState(() => _data.skinToneIndex = i),
-          onHairstyleChanged: (i) => setState(() => _data.hairstyleIndex = i),
-          onJerseyColorChanged: (i) =>
-              setState(() => _data.jerseyColorIndex = i),
-        );
-      case 2:
-        return PositionStep(
-          key: const ValueKey('position'),
-          selected: _data.positions,
-          onToggle: (position) => setState(() {
+        return DetailsStep(
+          key: const ValueKey('details'),
+          positions: _data.positions,
+          onTogglePosition: (position) => setState(() {
             if (!_data.positions.remove(position)) {
               _data.positions.add(position);
             }
           }),
-        );
-      case 3:
-        return ExperienceStep(
-          key: const ValueKey('experience'),
-          selected: _data.experience,
-          onSelect: (v) => setState(() => _data.experience = v),
-        );
-      case 4:
-        return CompetitivenessStep(
-          key: const ValueKey('competitiveness'),
-          selected: _data.competitiveness,
-          onSelect: (v) => setState(() => _data.competitiveness = v),
+          experience: _data.experience,
+          onExperienceChanged: (v) => setState(() {
+            _data.experience = v;
+            _data.experienceTouched = true;
+          }),
+          courtTypes: _data.courtTypes,
+          onToggleCourtType: (courtType) => setState(() {
+            if (!_data.courtTypes.remove(courtType)) {
+              _data.courtTypes.add(courtType);
+            }
+          }),
         );
       default:
         return const SizedBox.shrink();

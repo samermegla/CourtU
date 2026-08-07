@@ -4,90 +4,72 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../theme/colors.dart';
 
 const kExperienceLevels = [
+  'New',
   'Beginner',
   'Intermediate',
   'Advanced',
-  'Competitive',
+  'Semi-pro',
+  'Pro',
 ];
 
-/// Step 4: single-select experience level.
-class ExperienceStep extends StatelessWidget {
-  final String? selected;
-  final ValueChanged<String> onSelect;
+/// A labeled slider for experience level, one of the compact sections on
+/// the combined details step (see [DetailsStep]). Optional field, but a
+/// slider always shows *some* position, so it starts at 'Intermediate' --
+/// the middle of the six stops -- until the player drags it.
+class ExperienceSlider extends StatelessWidget {
+  final String value;
+  final ValueChanged<String> onChanged;
 
-  const ExperienceStep({
+  const ExperienceSlider({
     super.key,
-    required this.selected,
-    required this.onSelect,
+    required this.value,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
+    final index = kExperienceLevels.indexOf(value);
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "What's your\nexperience level?",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.w900,
-            color: context.colors.textPrimary,
-            height: 1.0,
-            letterSpacing: 0.64,
-          ),
-        ),
-        SizedBox(height: 28.h),
-        ...kExperienceLevels.map((level) {
-          final isSelected = selected == level;
-          return Padding(
-            padding: EdgeInsets.only(bottom: 10.h),
-            child: GestureDetector(
-              onTap: () => onSelect(level),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 18.w,
-                  vertical: 16.h,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? context.colors.steel.withValues(alpha: 0.2)
-                      : context.colors.surfaceAlt,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: isSelected
-                        ? context.colors.steelLight
-                        : context.colors.steel.withValues(alpha: 0.16),
-                    width: 1.5,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        level,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? context.colors.steelLight
-                              : context.colors.textPrimary,
-                        ),
-                      ),
-                    ),
-                    if (isSelected)
-                      Icon(
-                        Icons.check_circle,
-                        size: 18.sp,
-                        color: context.colors.steelLight,
-                      ),
-                  ],
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'EXPERIENCE',
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 10.sp,
+                letterSpacing: 1.2,
+                color: context.colors.textSecondary,
               ),
             ),
-          );
-        }),
+            Text(
+              value,
+              style: GoogleFonts.poppins(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w700,
+                color: context.colors.steelLight,
+              ),
+            ),
+          ],
+        ),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: context.colors.steel,
+            inactiveTrackColor: context.colors.border,
+            thumbColor: context.colors.steelLight,
+            overlayColor: context.colors.steelLight.withValues(alpha: 0.2),
+            valueIndicatorColor: context.colors.steel,
+          ),
+          child: Slider(
+            value: index.toDouble(),
+            min: 0,
+            max: (kExperienceLevels.length - 1).toDouble(),
+            divisions: kExperienceLevels.length - 1,
+            label: value,
+            onChanged: (v) => onChanged(kExperienceLevels[v.round()]),
+          ),
+        ),
       ],
     );
   }

@@ -10,16 +10,26 @@ const kPositions = [
   'Libero',
   'Defensive Specialist',
   'Setter',
+  // Catch-all for players without a formal indoor position -- a fallback,
+  // not a peer of the six above, so it sits last rather than alphabetized
+  // or grouped in.
+  'Outdoor',
 ];
 
-/// Step 3: "Which positions do you play?" — multi-select chips, same
-/// selected/unselected treatment as the sport selector on the signup screen.
-class PositionStep extends StatelessWidget {
+/// A labeled row of multi-select toggle chips. Selecting one never
+/// deselects another -- each chip just flips its own membership in
+/// [selected]. Used for both positions and court type on the combined
+/// details step (see [DetailsStep]).
+class ChipMultiSelect extends StatelessWidget {
+  final String label;
+  final List<String> options;
   final Set<String> selected;
   final ValueChanged<String> onToggle;
 
-  const PositionStep({
+  const ChipMultiSelect({
     super.key,
+    required this.label,
+    required this.options,
     required this.selected,
     required this.onToggle,
   });
@@ -27,36 +37,24 @@ class PositionStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Which positions\ndo you play?',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.w900,
-            color: context.colors.textPrimary,
-            height: 1.0,
-            letterSpacing: 0.64,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          'Pick as many as apply',
-          style: GoogleFonts.poppins(
-            fontSize: 13.sp,
+          label,
+          style: GoogleFonts.jetBrainsMono(
+            fontSize: 10.sp,
+            letterSpacing: 1.2,
             color: context.colors.textSecondary,
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: 10.h),
         Wrap(
-          alignment: WrapAlignment.center,
           spacing: 8.w,
           runSpacing: 8.h,
-          children: kPositions.map((position) {
-            final isSelected = selected.contains(position);
+          children: options.map((option) {
+            final isSelected = selected.contains(option);
             return GestureDetector(
-              onTap: () => onToggle(position),
+              onTap: () => onToggle(option),
               child: Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: 16.w,
@@ -75,7 +73,7 @@ class PositionStep extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  position,
+                  option,
                   style: GoogleFonts.poppins(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
