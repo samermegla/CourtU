@@ -124,6 +124,21 @@ multiple screens — those are the files worth a closer look in review.
   and which uses `.set()` without `merge`, so it overwrites whole docs —
   not worth it for a visual check. Not fixed as of Aug 2026; has cost
   verification time twice already.
+- **LAUNCH BLOCKER — Profile Setup replays on every app launch.**
+  `_AuthGateState._profileSetupComplete` (`lib/main.dart`) is a plain
+  in-memory bool, and its own TODO says so: there is no backend field
+  recording that a user finished Profile Setup, so the flag resets on every
+  app restart and every re-login. The gate only shows the map once that
+  bool is true, which means a real signed-in user is forced back through
+  Profile Setup **every single time they open the app** — their nickname
+  and details are collected again and thrown away again. Found Aug 8 2026
+  while trying to verify the two-step redesign on the PC.
+  Fix needs a persisted "completed profile setup" flag (Firestore
+  `users/{uid}`), which is part of the open schema conversation with Samer
+  — do NOT patch it locally in `main.dart` ahead of that decision.
+  Side effect worth knowing while it stands: restarting the app is
+  currently the *only* way to see Profile Setup again without signing out,
+  because the restart is what clears the flag.
 - Orphaned files — kept on disk, not deleted, so Samer's branch review
   doesn't have to reason about deletions on top of an already-open schema
   conversation:
