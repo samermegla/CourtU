@@ -140,23 +140,45 @@ multiple screens — those are the files worth a closer look in review.
     once Samer confirms nothing of his depends on it.
 
 ## Known-good toolchain
-Confirmed working on Pablo's **laptop** (Aug 2026) — the desk **PC**'s
-versions aren't yet confirmed to match, so check before assuming parity
-if something environment-shaped breaks on one machine and not the other:
+Confirmed working on **both** of Pablo's Windows machines (Aug 2026).
+Shared by laptop and desk PC:
 - Flutter 3.44.8 (stable channel), Dart 3.12.2
 - Java: OpenJDK 21.0.10 (Android Studio's bundled `jbr`, not a separate
-  install — `JAVA_HOME` isn't set as a system/user env var on the laptop)
-- Android SDK: platform-tools 37.0.0, build-tools 36.0.0, platforms
-  34/35/36/36.1
-- `JAVA_HOME`, `ANDROID_HOME`, and `ANDROID_SDK_ROOT` are all unset on the
-  laptop. `flutter run` doesn't need them — Flutter finds Android Studio's
-  bundled JDK on its own — but a raw `gradlew`/`gradlew.bat` command (e.g.
-  to run a single Gradle task directly) needs `JAVA_HOME` set first in
-  that terminal:
+  install)
+- Android SDK platform-tools 37.0.0
+- `JAVA_HOME`, `ANDROID_HOME`, and `ANDROID_SDK_ROOT` are all unset on
+  both machines. `flutter run` doesn't need them — Flutter finds Android
+  Studio's bundled JDK on its own — but a raw `gradlew`/`gradlew.bat`
+  command (e.g. to run a single Gradle task directly) needs `JAVA_HOME`
+  set first in that terminal:
   ```
   $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
   ```
-  Same fix already documented for fresh terminals on the PC.
+
+Where the two machines differ — **both differences were tested and neither
+matters**, so don't "fix" them into parity without a reason:
+
+| | Laptop | Desk PC |
+|---|---|---|
+| build-tools | 36.0.0 | 28.0.3, 36.0.0, 36.1.0, 37.0.0 (Flutter picks **36.1.0**) |
+| platforms | 34/35/36/36.1 | 34/35/36 (**no 36.1**) |
+
+Verified on the PC (Aug 8 2026): `flutter run -d emulator-5554` produced a
+clean `assembleDebug` in **14s** with build-tools 36.1.0 and no android-36.1
+platform installed. `android/app/build.gradle.kts` pins no SDK numbers of
+its own — `compileSdk`/`targetSdk`/`minSdk` all inherit from Flutter's
+defaults — which is why the missing platform doesn't bite. If a future
+change hardcodes `compileSdk = 36.1`, the PC would need that platform
+installed; nothing does today.
+
+Also on the PC only: `java` is not on PATH (no system JDK — only Android
+Studio's bundled one), and `flutter doctor` flags **Visual Studio not
+installed**. Neither affects this project; Visual Studio is only needed for
+Windows *desktop* builds, which CourtU doesn't target. Don't install it.
+
+Note `flutter doctor` reports only the newest installed platform, so it
+can't be used to compare the platform lists above — read
+`%LOCALAPPDATA%\Android\sdk\platforms` directly instead.
 
 ## Working style (Pablo is non-technical)
 - Explain every technical decision in plain language, with a one-sentence
