@@ -131,16 +131,25 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          MapWidget(
-            // Changing the key forces a fresh map when the style swaps;
-            // without it the widget keeps the old style loaded.
-            key: ValueKey(isDark),
-            onMapCreated: _onMapCreated,
-            styleUri: isDark ? MapStyles.dark : MapStyles.light,
-            cameraOptions: CameraOptions(
-              center: _lastCamera?.center ??
-                  Point(coordinates: Position(-96.7502, 32.9857)),
-              zoom: _lastCamera?.zoom ?? 14.3,
+          // Mapbox draws edge-to-edge by default, so its own scale bar and any
+          // POI labels near the top would otherwise sit under the status bar.
+          // SafeArea insets the map's own viewport by the same status-bar
+          // height the gear icon already uses, so nothing Mapbox draws can
+          // land there. Bottom is left un-inset -- the map should still run
+          // to the gesture nav bar / screen edge at the bottom.
+          SafeArea(
+            bottom: false,
+            child: MapWidget(
+              // Changing the key forces a fresh map when the style swaps;
+              // without it the widget keeps the old style loaded.
+              key: ValueKey(isDark),
+              onMapCreated: _onMapCreated,
+              styleUri: isDark ? MapStyles.dark : MapStyles.light,
+              cameraOptions: CameraOptions(
+                center: _lastCamera?.center ??
+                    Point(coordinates: Position(-96.7502, 32.9857)),
+                zoom: _lastCamera?.zoom ?? 14.3,
+              ),
             ),
           ),
           // Gear sits top-right: the court markers live in the middle of the
