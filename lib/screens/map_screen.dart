@@ -297,11 +297,15 @@ class _VenueSheet extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 19.2.sp,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.neonMint,
+                  // Was a fixed neon mint, tuned for the dark-mode button and
+                  // low-contrast on the light-mode one (known issue from
+                  // 884f69a). textPrimary inverts correctly with the mode
+                  // instead: near-black in light, near-white in dark.
+                  color: context.colors.textPrimary,
                   letterSpacing: 0.8,
                   shadows: [
                     Shadow(
-                      color: AppColors.neonMint.withValues(alpha: 0.6),
+                      color: context.colors.textPrimary.withValues(alpha: 0.6),
                       blurRadius: 12,
                     ),
                   ],
