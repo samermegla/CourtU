@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/logo_wordmark.dart';
 import '../widgets/auth_field.dart';
-import '../services/firestore_service.dart';
+import '../services/user_profile_service.dart';
 import '../services/auth_service.dart';
 import 'welcome_screen.dart';
 
@@ -63,7 +63,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final _firestoreService = FirestoreService();
+  final _profileService = UserProfileService();
   final _nameController = TextEditingController(); //holds the username
   final _authService = AuthService();
 
@@ -114,7 +114,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     try {
       final user = _authService.currentUser;
       if (user != null) {
-        await _firestoreService.createProfile(
+        await _profileService.createProfile(
           uid: user.uid,
           name: name,
           email: user.email,

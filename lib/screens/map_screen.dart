@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../config/mapbox_config.dart';
 import '../services/geolocation_service.dart';
+import '../services/court_service.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final GeolocationService _geolocation = const GeolocationService();
-
+  final CourtService _courtService = CourtService();
 
   static final Point _fallbackCenter =
       Point(coordinates: Position(-96.7502, 32.9857));
@@ -27,10 +28,17 @@ class _MapScreenState extends State<MapScreen> {
 
   bool _loading = true;
 
+  /// Draws the court dots. Created once the map is ready (see [_onMapCreated]).
+  CircleAnnotationManager? _courtManager;
+
+  /// Court data loaded from Firestore, each a plain map with id + fields.
+  List<Map<String, dynamic>> _courts = [];
+
   @override
   void initState() {
     super.initState();
     _loadUserLocation();
+    _loadCourts();
   }
 
   Future<void> _loadUserLocation() async {
@@ -66,6 +74,57 @@ class _MapScreenState extends State<MapScreen> {
         coordinates: Position(position.longitude, position.latitude),
       );
 
+  /// Loads courts from Firestore. On the very first run the collection is empty,
+  /// so we seed the UT Dallas court once, then read it back. After that it's
+  /// read-only (no repeated writes).
+  Future<void> _loadCourts() async {
+    try {
+      var courts = await _courtService.fetchCourts();
+      if (courts.isEmpty) {
+        await _courtService.seedUtDallas();
+        courts = await _courtService.fetchCourts();
+      }
+      if (!mounted) return;
+      _courts = courts;
+      await _renderCourts();
+    } catch (e) {
+      debugPrint('Could not load courts: $e');
+    }
+  }
+
+  /// Mapbox hands us the map controller once the platform view is ready. We use
+  /// it to create the annotation manager, then draw whatever courts we have.
+  Future<void> _onMapCreated(MapboxMap map) async {
+    _courtManager = await map.annotations.createCircleAnnotationManager();
+    await _renderCourts();
+  }
+
+  /// Draws one dot per court. Guarded because the map and the Firestore fetch
+  /// finish in an unpredictable order — this runs from both, and whichever
+  /// completes last does the actual drawing. [deleteAll] keeps it from doubling
+  /// up if both paths fire.
+  Future<void> _renderCourts() async {
+    final manager = _courtManager;
+    if (manager == null || _courts.isEmpty) return;
+    await manager.deleteAll();
+    for (final court in _courts) {
+      await manager.create(
+        CircleAnnotationOptions(
+          geometry: Point(
+            coordinates: Position(
+              (court['longitude'] as num).toDouble(),
+              (court['latitude'] as num).toDouble(),
+            ),
+          ),
+          circleRadius: 8.0,
+          circleColor: 0xFFEF6C00, // orange
+          circleStrokeWidth: 2.0,
+          circleStrokeColor: 0xFFFFFFFF, // white outline
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -82,6 +141,7 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: MapWidget(
         styleUri: MapboxConfig.styleUri,
+        onMapCreated: _onMapCreated,
         viewport: CameraViewportState(
           center: _center,
           zoom: 12.0,

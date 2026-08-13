@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirestoreService {
+class UserProfileService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<void> createProfile({
