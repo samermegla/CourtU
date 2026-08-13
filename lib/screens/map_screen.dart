@@ -34,13 +34,17 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _loadUserLocation() async {
-    final lastKnown = await _geolocation.getLastKnownLocation();
-    if (!mounted) return;
-    if (lastKnown != null) {
-      setState(() {
-        _center = _pointFrom(lastKnown);
-        _loading = false; 
-      });
+    try {
+      final lastKnown = await _geolocation.getLastKnownLocation();
+      if (!mounted) return;
+      if (lastKnown != null) {
+        setState(() {
+          _center = _pointFrom(lastKnown);
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Could not get last known location: $e');
     }
 
 
