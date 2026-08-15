@@ -50,14 +50,37 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
+    // Read before the first await — `context` must not be touched across an
+    // async gap.
+    final attributionColor = context.colors.textSecondary.toARGB32();
     // Mapbox's terms require the logo and attribution (i) to stay visible —
-    // only their position/margins are ours to adjust. Tucked into the
-    // bottom-right, out of the way of future bottom sheets/nav bars.
+    // only their position/margins/tint are ours to adjust.
+    //
+    // Both live bottom-left on Mapbox's own default margins: the logo at 4,
+    // and the (i) at 92, which is the clearance for the logo's width. Pinning
+    // both bottom-right at the same margin (as this used to) stacked them on
+    // top of each other and pushed the (i) half off the screen edge.
+    //
+    // Position and margins are passed explicitly rather than left null,
+    // because the platforms disagree about null: Android keeps the current
+    // value, while iOS falls back to a hardcoded case — bottom-LEFT for the
+    // logo but bottom-RIGHT for the (i), both with zero margins. Being
+    // explicit keeps the two platforms in agreement.
     await mapboxMap.logo.updateSettings(
-      LogoSettings(position: OrnamentPosition.BOTTOM_RIGHT, marginRight: 8, marginBottom: 8),
+      LogoSettings(position: OrnamentPosition.BOTTOM_LEFT, marginLeft: 4, marginBottom: 4),
     );
     await mapboxMap.attribution.updateSettings(
-      AttributionSettings(position: OrnamentPosition.BOTTOM_RIGHT, marginRight: 8, marginBottom: 8),
+      AttributionSettings(
+        position: OrnamentPosition.BOTTOM_LEFT,
+        marginLeft: 92,
+        marginBottom: 4,
+        // Muted grey instead of Mapbox's default #1E8CAB blue, so the (i)
+        // draws less attention. Its size isn't adjustable — the plugin
+        // exposes no size/scale for either ornament — so tone is the only
+        // lever. Still needs to stay legible; attribution is a terms
+        // requirement, not decoration.
+        iconColor: attributionColor,
+      ),
     );
     // The scale bar is NOT part of Mapbox's attribution requirements the way
     // the logo and (i) above are, so unlike those it's ours to switch off.
