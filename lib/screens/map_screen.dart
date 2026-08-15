@@ -59,6 +59,14 @@ class _MapScreenState extends State<MapScreen> {
     await mapboxMap.attribution.updateSettings(
       AttributionSettings(position: OrnamentPosition.BOTTOM_RIGHT, marginRight: 8, marginBottom: 8),
     );
+    // The scale bar is NOT part of Mapbox's attribution requirements the way
+    // the logo and (i) above are, so unlike those it's ours to switch off.
+    // On by default, and it drew straight through the "Medical Center" POI
+    // label in the top-left. Platform split worth knowing: Android treats
+    // enabled:true as always-visible, while iOS maps it to `.adaptive` (shows
+    // only while zooming) — so this collision is Android-side, and disabling
+    // gives both platforms the same result.
+    await mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
 
     final manager = await mapboxMap.annotations.createCircleAnnotationManager();
 
