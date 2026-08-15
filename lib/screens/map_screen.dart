@@ -297,15 +297,16 @@ class _VenueSheet extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 19.2.sp,
                   fontWeight: FontWeight.w900,
-                  // Was a fixed neon mint, tuned for the dark-mode button and
-                  // low-contrast on the light-mode one (known issue from
-                  // 884f69a). textPrimary inverts correctly with the mode
-                  // instead: near-black in light, near-white in dark.
-                  color: context.colors.textPrimary,
+                  // White in both modes, matching GradientButton's label: this
+                  // text sits on the steel gradient, which does not invert with
+                  // the theme, so the foreground shouldn't either. Previously
+                  // textPrimary, which went near-black in light mode and read
+                  // as a black button instead of a glowing one.
+                  color: Colors.white,
                   letterSpacing: 0.8,
                   shadows: [
                     Shadow(
-                      color: context.colors.textPrimary.withValues(alpha: 0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       blurRadius: 12,
                     ),
                   ],
