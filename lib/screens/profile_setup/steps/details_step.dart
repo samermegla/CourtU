@@ -51,23 +51,30 @@ class DetailsStep extends StatelessWidget {
             letterSpacing: 0.64,
           ),
         ),
-        SizedBox(height: 28.h),
+        // The step content is centred vertically by the parent
+        // (profile_setup_screen.dart), so these gaps do double duty: they
+        // separate the sections AND, by making the block taller, push the
+        // headline toward the top and the placeholder toward the bottom.
+        // Shortening the position chip labels collapsed them from four rows
+        // to two, which is what left the block looking scrunched in the
+        // middle with dead space at both ends.
+        SizedBox(height: 64.h),
         ChipMultiSelect(
           label: 'WHAT DO YOU PLAY?',
           options: kPositions,
           selected: positions,
           onToggle: onTogglePosition,
         ),
-        SizedBox(height: 22.h),
+        SizedBox(height: 40.h),
         ExperienceSlider(value: experience, onChanged: onExperienceChanged),
-        SizedBox(height: 22.h),
+        SizedBox(height: 40.h),
         ChipMultiSelect(
           label: 'COURT TYPE',
           options: kCourtTypes,
           selected: courtTypes,
           onToggle: onToggleCourtType,
         ),
-        SizedBox(height: 18.h),
+        SizedBox(height: 56.h),
         Text(
           'User Customization Settings, coming soon...',
           textAlign: TextAlign.center,
