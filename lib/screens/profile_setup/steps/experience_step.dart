@@ -13,17 +13,25 @@ const kExperienceLevels = [
 ];
 
 /// A labeled slider for experience level, one of the compact sections on
-/// the combined details step (see [DetailsStep]). Optional field, but a
-/// slider always shows *some* position, so it starts at 'Intermediate' --
-/// the middle of the six stops -- until the player drags it.
+/// the combined details step (see [DetailsStep]). Required before the step
+/// can be completed, but a slider always shows *some* position, so it rests
+/// at 'New' -- the first of the six stops -- until the player touches it.
+///
+/// [onTouched] fires on interaction start rather than on value change,
+/// because those differ in exactly the case that matters: a player who
+/// really is 'New' taps the thumb where it already sits, which changes no
+/// value and so never fires [onChanged]. Gating on [onChanged] alone would
+/// leave that player unable to finish the step.
 class ExperienceSlider extends StatelessWidget {
   final String value;
   final ValueChanged<String> onChanged;
+  final VoidCallback onTouched;
 
   const ExperienceSlider({
     super.key,
     required this.value,
     required this.onChanged,
+    required this.onTouched,
   });
 
   @override
@@ -67,6 +75,7 @@ class ExperienceSlider extends StatelessWidget {
             max: (kExperienceLevels.length - 1).toDouble(),
             divisions: kExperienceLevels.length - 1,
             label: value,
+            onChangeStart: (_) => onTouched(),
             onChanged: (v) => onChanged(kExperienceLevels[v.round()]),
           ),
         ),

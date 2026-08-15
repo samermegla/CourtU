@@ -36,9 +36,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       case 0:
         return _data.nickname.trim().isNotEmpty;
       case 1:
-        // Only positions are required -- experience and court type are
-        // preferences, not identity, and always have a value regardless.
-        return _data.positions.isNotEmpty;
+        // All three sections are required. Experience can't be checked by
+        // value -- the slider always shows one -- so it's gated on
+        // `experienceTouched`, which is set the moment the player interacts
+        // with it (see [ExperienceSlider.onTouched]).
+        return _data.positions.isNotEmpty &&
+            _data.experienceTouched &&
+            _data.courtTypes.isNotEmpty;
       default:
         return false;
     }
@@ -78,6 +82,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           experience: _data.experience,
           onExperienceChanged: (v) => setState(() {
             _data.experience = v;
+            _data.experienceTouched = true;
+          }),
+          onExperienceTouched: () => setState(() {
             _data.experienceTouched = true;
           }),
           courtTypes: _data.courtTypes,

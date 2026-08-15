@@ -21,6 +21,7 @@ class DetailsStep extends StatelessWidget {
   final ValueChanged<String> onTogglePosition;
   final String experience;
   final ValueChanged<String> onExperienceChanged;
+  final VoidCallback onExperienceTouched;
   final Set<String> courtTypes;
   final ValueChanged<String> onToggleCourtType;
 
@@ -30,6 +31,7 @@ class DetailsStep extends StatelessWidget {
     required this.onTogglePosition,
     required this.experience,
     required this.onExperienceChanged,
+    required this.onExperienceTouched,
     required this.courtTypes,
     required this.onToggleCourtType,
   });
@@ -66,7 +68,11 @@ class DetailsStep extends StatelessWidget {
           onToggle: onTogglePosition,
         ),
         SizedBox(height: 40.h),
-        ExperienceSlider(value: experience, onChanged: onExperienceChanged),
+        ExperienceSlider(
+          value: experience,
+          onChanged: onExperienceChanged,
+          onTouched: onExperienceTouched,
+        ),
         SizedBox(height: 40.h),
         ChipMultiSelect(
           label: 'COURT TYPE',
