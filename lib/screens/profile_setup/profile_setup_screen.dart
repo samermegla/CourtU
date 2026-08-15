@@ -117,7 +117,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.chevron_right,
+                            Icons.chevron_left,
                             size: 14.sp,
                             color: context.colors.textSecondary,
                           ),
