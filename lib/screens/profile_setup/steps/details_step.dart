@@ -41,7 +41,7 @@ class DetailsStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'Tell us how\nyou play',
+          'Please let us know',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             fontSize: 32.sp,
@@ -53,7 +53,7 @@ class DetailsStep extends StatelessWidget {
         ),
         SizedBox(height: 28.h),
         ChipMultiSelect(
-          label: 'POSITIONS',
+          label: 'WHAT DO YOU PLAY?',
           options: kPositions,
           selected: positions,
           onToggle: onTogglePosition,
@@ -69,7 +69,7 @@ class DetailsStep extends StatelessWidget {
         ),
         SizedBox(height: 18.h),
         Text(
-          'Customization coming soon in Settings',
+          'User Customization Settings, coming soon...',
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             fontSize: 11.sp,

@@ -4,11 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../theme/colors.dart';
 
 const kPositions = [
-  'Outside Hitter',
-  'Middle Blocker',
+  'Outside',
+  'Middle',
   'Right Side',
   'Libero',
-  'Defensive Specialist',
+  'DS',
   'Setter',
   // Catch-all for players without a formal indoor position -- a fallback,
   // not a peer of the six above, so it sits last rather than alphabetized
