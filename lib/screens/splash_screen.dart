@@ -29,25 +29,25 @@ class _SplashScreenState extends State<SplashScreen>
   // dx/dy are offsets from the center of the screen.
   static const _pins = [
     _PinData(
-      label: 'Rec Main',
+      label: 'Rec West',
       color: AppColors.statusHot,
       dx: -82,
       dy: -118,
     ),
     _PinData(
-      label: 'North AC',
+      label: 'Activity Center',
       color: AppColors.statusActive,
       dx: 84,
       dy: -132,
     ),
     _PinData(
-      label: 'Tennis Pav',
+      label: 'Sand Courts',
       color: AppColors.statusQuiet,
       dx: -86,
       dy: -30,
     ),
     _PinData(
-      label: 'East Arena',
+      label: 'Natatorium',
       color: AppColors.statusEmpty,
       dx: 84,
       dy: -48,
@@ -364,10 +364,10 @@ class _MapBackdropPainter extends CustomPainter {
   /// pin's own dy because a pin's circle sits 10 above its column center
   /// (the short-name label hangs below it).
   static const _buildings = [
-    (-82.0, -128.0, 72.0, 46.0), // Rec Main
-    (84.0, -142.0, 76.0, 48.0), // North AC
-    (-86.0, -40.0, 74.0, 46.0), // Tennis Pav
-    (84.0, -58.0, 72.0, 46.0), // East Arena
+    (-82.0, -128.0, 72.0, 46.0), // Rec West
+    (84.0, -142.0, 76.0, 48.0), // Activity Center
+    (-86.0, -40.0, 74.0, 46.0), // Sand Courts
+    (84.0, -58.0, 72.0, 46.0), // Natatorium
     // Unoccupied buildings, for campus texture
     (0.0, -196.0, 62.0, 34.0),
     (-138.0, 62.0, 54.0, 34.0),
