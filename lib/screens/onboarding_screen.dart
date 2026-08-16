@@ -99,8 +99,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'Personalize your sports identity.\nInvite your friends to join!',
       floats: [
         _FloatData(
-          top: 20,
-          right: 12,
+          top: 10,
+          // Negative: sits 3 past the card's right edge, clearing the dino's
+          // head now that the panel is translucent. The stack is Clip.none,
+          // so overhanging the card is fine.
+          right: -3,
           child: _FloatPanel(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
             child: Column(
