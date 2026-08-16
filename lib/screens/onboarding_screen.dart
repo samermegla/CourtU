@@ -35,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // float widgets inside carry themed colors that change with light/dark.
   List<_SlideData> _slidesFor(BuildContext context) => [
     _SlideData(
-      tag: 'LIVE',
+      tag: 'Live',
       emoji: '🗺️',
       emojiFontSize: 104.55,
       headline: 'Your courts.\nReal time.',
@@ -54,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
     ),
     _SlideData(
-      tag: 'connect',
+      tag: 'Connect',
       emoji: '🏐',
       headline: 'Show up\ntogether.',
       body:
@@ -100,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
     ),
     _SlideData(
-      tag: 'customize',
+      tag: 'Customize',
       emoji: '🦕',
       headline: 'Customize\nand make\nfriends.',
       body:
@@ -283,7 +283,7 @@ class _TopBar extends StatelessWidget {
 // 3. TAG PILL
 // ─────────────────────────────────────────────
 // A small rounded badge with a glowing dot and
-// the slide's label in uppercase monospace text.
+// the slide's label in monospace text.
 
 class _TagPill extends StatelessWidget {
   final String label;
@@ -309,13 +309,14 @@ class _TagPill extends StatelessWidget {
             height: 6.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: label == 'LIVE'
-                  ? Colors.red
-                  : label == 'connect'
-                      ? Colors.green
-                      : label == 'customize'
-                          ? Colors.blue
-                          : context.colors.steelLight,
+              // Matched case-insensitively so re-casing a tag's wording
+              // doesn't silently drop its dot back to the fallback colour.
+              color: switch (label.toLowerCase()) {
+                'live' => Colors.red,
+                'connect' => Colors.green,
+                'customize' => Colors.blue,
+                _ => context.colors.steelLight,
+              },
             ),
           ),
           SizedBox(width: 6.w),
