@@ -345,8 +345,7 @@ class _CourtPin extends StatelessWidget {
 // ─────────────────────────────────────────────
 // MAP BACKDROP
 // ─────────────────────────────────────────────
-// Faint campus grid, roads and building outlines
-// behind the rings.
+// Faint campus grid and roads behind the rings.
 
 class _MapBackdropPainter extends CustomPainter {
   /// Painters sit outside the widget tree, so they can't read `context`.
@@ -355,25 +354,6 @@ class _MapBackdropPainter extends CustomPainter {
   final Color border;
 
   const _MapBackdropPainter({required this.steel, required this.border});
-
-  /// Campus buildings: (dx, dy, width, height), where dx/dy offset the
-  /// building's center from the center of the screen — the same coordinate
-  /// space the pins use, so a pin sits squarely on its building.
-  ///
-  /// The first four are the ones the pins stand on; their dy is 10 above the
-  /// pin's own dy because a pin's circle sits 10 above its column center
-  /// (the short-name label hangs below it).
-  static const _buildings = [
-    (-82.0, -128.0, 72.0, 46.0), // Rec West
-    (84.0, -142.0, 76.0, 48.0), // Activity Center
-    (-86.0, -40.0, 74.0, 46.0), // Sand Courts
-    (84.0, -58.0, 72.0, 46.0), // Natatorium
-    // Unoccupied buildings, for campus texture
-    (0.0, -196.0, 62.0, 34.0),
-    (-138.0, 62.0, 54.0, 34.0),
-    (132.0, 74.0, 58.0, 36.0),
-    (-10.0, 150.0, 84.0, 40.0),
-  ];
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -403,31 +383,6 @@ class _MapBackdropPainter extends CustomPainter {
       Offset(size.width / 2, size.height),
       road,
     );
-
-    // Building outlines, over the roads
-    final buildingFill = Paint()
-      ..color = border.withValues(alpha: 0.22)
-      ..style = PaintingStyle.fill;
-
-    final buildingStroke = Paint()
-      ..color = steel.withValues(alpha: 0.16)
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke;
-
-    final center = Offset(size.width / 2, size.height / 2);
-
-    for (final (dx, dy, w, h) in _buildings) {
-      final rect = RRect.fromRectAndRadius(
-        Rect.fromCenter(
-          center: center + Offset(dx.r, dy.r),
-          width: w.r,
-          height: h.r,
-        ),
-        Radius.circular(3.r),
-      );
-      canvas.drawRRect(rect, buildingFill);
-      canvas.drawRRect(rect, buildingStroke);
-    }
   }
 
   @override
