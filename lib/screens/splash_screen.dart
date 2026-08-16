@@ -363,10 +363,18 @@ class _MapBackdropPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     const step = 40.0;
-    for (double x = 0; x <= size.width; x += step) {
+
+    // Anchor the grid to the screen's center rather than its top-left corner.
+    // Walking from the edge dumps the whole leftover into one strip on the
+    // right; starting at the centre's remainder splits it evenly between both
+    // edges and puts a grid line exactly on the road cross drawn below.
+    final firstX = (size.width / 2) % step;
+    final firstY = (size.height / 2) % step;
+
+    for (double x = firstX; x <= size.width; x += step) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), grid);
     }
-    for (double y = 0; y <= size.height; y += step) {
+    for (double y = firstY; y <= size.height; y += step) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
     }
 
