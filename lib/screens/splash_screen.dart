@@ -31,25 +31,25 @@ class _SplashScreenState extends State<SplashScreen>
     _PinData(
       label: 'Rec West',
       color: AppColors.statusHot,
-      dx: -82,
+      dx: -72,
       dy: -118,
     ),
     _PinData(
       label: 'Activity Center',
       color: AppColors.statusActive,
-      dx: 84,
+      dx: 69,
       dy: -132,
     ),
     _PinData(
       label: 'Sand Courts',
       color: AppColors.statusQuiet,
-      dx: -86,
+      dx: -96,
       dy: -30,
     ),
     _PinData(
       label: 'Natatorium',
       color: AppColors.statusEmpty,
-      dx: 84,
+      dx: 94,
       dy: -48,
     ),
   ];
