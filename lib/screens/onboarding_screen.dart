@@ -63,15 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _FloatData(
           bottom: 30,
           right: 0,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: context.colors.steel.withValues(alpha: 0.27),
-              ),
-            ),
+          child: _FloatPanel(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -109,15 +101,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _FloatData(
           top: 20,
           right: 12,
-          child: Container(
+          child: _FloatPanel(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
-                color: context.colors.steel.withValues(alpha: 0.27),
-              ),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -566,15 +551,24 @@ class _SlideData {
   });
 }
 
-class _FloatBadge extends StatelessWidget {
-  final String text;
+/// The plate every floating badge sits on, across all three slides.
+///
+/// Slide 1 set the look — a translucent steel tint rather than a solid fill,
+/// so the badge reads as glass over the emoji card. Slides 2 and 3 used to
+/// carry their own solid-surface copies with a different border and radius,
+/// which made the same element look like three different components as you
+/// paged through. They all share this one now.
+class _FloatPanel extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
 
-  const _FloatBadge({required this.text});
+  const _FloatPanel({required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding:
+          padding ?? EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: context.colors.steel.withValues(alpha: 0.13),
         borderRadius: BorderRadius.circular(12.r),
@@ -582,6 +576,19 @@ class _FloatBadge extends StatelessWidget {
           color: context.colors.steel.withValues(alpha: 0.33),
         ),
       ),
+      child: child,
+    );
+  }
+}
+
+class _FloatBadge extends StatelessWidget {
+  final String text;
+
+  const _FloatBadge({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return _FloatPanel(
       child: Text(
         text,
         style: GoogleFonts.jetBrainsMono(
