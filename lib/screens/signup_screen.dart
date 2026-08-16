@@ -113,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.chevron_right,
+                          Icons.chevron_left,
                           size: 14.sp,
                           color: context.colors.textSecondary,
                         ),
