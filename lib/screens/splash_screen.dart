@@ -29,28 +29,24 @@ class _SplashScreenState extends State<SplashScreen>
   // dx/dy are offsets from the center of the screen.
   static const _pins = [
     _PinData(
-      emoji: '🏐',
       label: 'Rec Main',
       color: AppColors.statusHot,
       dx: -82,
       dy: -118,
     ),
     _PinData(
-      emoji: '🏀',
       label: 'North AC',
       color: AppColors.statusActive,
       dx: 84,
       dy: -132,
     ),
     _PinData(
-      emoji: '🎾',
       label: 'Tennis Pav',
       color: AppColors.statusQuiet,
       dx: -86,
       dy: -30,
     ),
     _PinData(
-      emoji: '🏸',
       label: 'East Arena',
       color: AppColors.statusEmpty,
       dx: 84,
@@ -279,19 +275,17 @@ class _SplashScreenState extends State<SplashScreen>
 // ─────────────────────────────────────────────
 // COURT PIN
 // ─────────────────────────────────────────────
-// A sport emoji in a colored circle with a short
-// name underneath — the same pin the campus map
-// uses, scattered here as splash set dressing.
+// A glowing colored circle with a short name
+// underneath — the same pin the campus map uses,
+// scattered here as splash set dressing.
 
 class _PinData {
-  final String emoji;
   final String label;
   final Color color;
   final double dx;
   final double dy;
 
   const _PinData({
-    required this.emoji,
     required this.label,
     required this.color,
     required this.dx,
@@ -310,8 +304,8 @@ class _CourtPin extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 36.r,
-          height: 36.r,
+          width: 30.6.r,
+          height: 30.6.r,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: pin.color.withValues(alpha: 0.10),
@@ -319,25 +313,28 @@ class _CourtPin extends StatelessWidget {
               color: pin.color.withValues(alpha: 0.45),
               width: 1.5,
             ),
+            // Subtle halo in the pin's own status color. With no icon inside,
+            // this is what keeps an empty circle reading as a live court
+            // rather than a stray dot.
+            boxShadow: [
+              BoxShadow(
+                color: pin.color.withValues(alpha: 0.28),
+                blurRadius: 12,
+                spreadRadius: 1,
+              ),
+            ],
           ),
-          alignment: Alignment.center,
-          child: Text(pin.emoji, style: TextStyle(fontSize: 16.sp)),
         ),
         SizedBox(height: 4.h),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          decoration: BoxDecoration(
-            color: context.colors.surface.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(4.r),
-            border: Border.all(color: pin.color.withValues(alpha: 0.2)),
-          ),
-          child: Text(
-            pin.label,
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: 9.sp,
-              fontWeight: FontWeight.w600,
-              color: pin.color.withValues(alpha: 0.7),
-            ),
+        // Bare text, no plate behind it. Without the chip's background the
+        // name sits directly on the map backdrop, so it carries a little more
+        // alpha than it did to stay readable over the grid.
+        Text(
+          pin.label,
+          style: GoogleFonts.jetBrainsMono(
+            fontSize: 9.sp,
+            fontWeight: FontWeight.w600,
+            color: pin.color.withValues(alpha: 0.9),
           ),
         ),
       ],
