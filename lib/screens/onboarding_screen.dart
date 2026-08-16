@@ -93,9 +93,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _SlideData(
       tag: 'Customize',
       emoji: '🦕',
-      headline: 'Customize\nand make\nfriends.',
+      headline: 'Customize\nwith friends.',
       body:
-          'Personalize your sports identity.\nInvite your friends to join!',
+          'Invite your friends to join!\nCharacter creation coming soon...',
       floats: [
         _FloatData(
           top: 10,
