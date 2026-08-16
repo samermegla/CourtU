@@ -227,7 +227,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: FadeTransition(
                           opacity: _taglineFade,
                           child: Text(
-                            'Play together. Level up.',
+                            'Tap In. Together.',
                             style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               color: context.colors.textSecondary,
