@@ -255,12 +255,22 @@ class _TopBar extends StatelessWidget {
           const LogoWordmark(size: 24),
           GestureDetector(
             onTap: onSkip,
-            child: Text(
-              'SKIP →',
-              style: GoogleFonts.poppins(
-                fontSize: 11.sp,
-                color: context.colors.textSecondary,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'SKIP',
+                  style: GoogleFonts.poppins(
+                    fontSize: 11.sp,
+                    color: context.colors.textSecondary,
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  size: 14.sp,
+                  color: context.colors.textSecondary,
+                ),
+              ],
             ),
           ),
         ],
