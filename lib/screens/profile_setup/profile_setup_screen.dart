@@ -128,11 +128,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             size: 14.sp,
                             color: context.colors.textSecondary,
                           ),
-                          SizedBox(width: 4.w),
                           Text(
-                            'Back',
+                            'BACK',
                             style: GoogleFonts.poppins(
-                              fontSize: 14.sp,
+                              fontSize: 11.sp,
                               color: context.colors.textSecondary,
                             ),
                           ),
