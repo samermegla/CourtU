@@ -404,24 +404,6 @@ class _MapBackdropPainter extends CustomPainter {
       road,
     );
 
-    // Big diagonal X, drawn at a true 45°: each line's horizontal travel
-    // equals its vertical travel (slope ±1), crossing at the screen center.
-    // On a tall screen this pushes the ends past the left/right edges, so the
-    // X is clipped by the screen rather than tapering toward the corners.
-    road.strokeWidth = 4;
-    final cx = size.width / 2;
-    final half = size.height / 2;
-    canvas.drawLine(
-      Offset(cx - half, 0),
-      Offset(cx + half, size.height),
-      road,
-    );
-    canvas.drawLine(
-      Offset(cx + half, 0),
-      Offset(cx - half, size.height),
-      road,
-    );
-
     // Building outlines, over the roads
     final buildingFill = Paint()
       ..color = border.withValues(alpha: 0.22)
