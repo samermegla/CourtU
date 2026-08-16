@@ -57,8 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       tag: 'Connect',
       emoji: '🏐',
       headline: 'Show up\ntogether.',
-      body:
-          'Tap into a court to let others know you\'re there. Rally up players in seconds, not hours.',
+      body: 'Tap onto a court to update others\n& rally up.',
       floats: [
         _FloatData(
           bottom: 30,
