@@ -257,7 +257,7 @@ class _TopBar extends StatelessWidget {
             onTap: onSkip,
             child: Text(
               'SKIP →',
-              style: GoogleFonts.jetBrainsMono(
+              style: GoogleFonts.poppins(
                 fontSize: 11.sp,
                 color: context.colors.textSecondary,
               ),
