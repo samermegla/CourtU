@@ -12,6 +12,13 @@ Built for UT Dallas. Flutter · Firebase · Mapbox.
 
 ---
 
+## Team
+
+- **[Samer Megla](https://github.com/samermegla)** — Development: Flutter implementation, Firebase auth, Firestore data model, Mapbox GeoLo integration 
+- **[Pablo Nguyen](https://www.linkedin.com/in/pablo-nguyen-06pn/)** — Product Design: UX flow, Map Stylist, Feedback Research
+
+---
+
 ## The problem
 
 Pickup volleyball on campus runs on rumor. You text a group chat, get no
@@ -98,6 +105,34 @@ lib/
 ├── services/              # Firebase Auth, Firestore, geolocation
 └── config/                # Mapbox style URLs
 ```
+
+
+## Current status
+
+**Working today:** the full pre-map flow — splash, onboarding, sign up and
+sign in (email/password with verification, and Google(bugs WIP)), profile setup, and
+the welcome hand-off. The map renders real Mapbox tiles centered on campus in
+both the custom light and dark styles, with courts drawn as markers. Light /
+dark / system theming works across every screen and persists between launches.
+
+**In progress — the v1 finish line:**
+
+- [ ] Persist profile setup to Firestore, so returning users skip it
+- [ ] Venue sheet — tap a court for its name, live player count, and actions
+- [ ] Check-in — "I'm going" now or scheduled, auto-expiring after ~2 hours
+- [ ] Live player counts syncing across users in realtime
+- [ ] Firestore security rules (required before any real check-in data flows)
+- [ ] Onboard the rest of the UTD courts (one is in the map data today)
+- [ ] AD Free Score Keeper
+- [ ] Field-tested location services.
+- [ ] Terms and Privacy.
+- [ ] Upload to app stores.
+
+**Deliberately out of scope for v1:** streaks and badges, leaderboards,
+friends and chat, background location, and multi-sport
+support. The goal for launch is that one flow — find a live court, say you're
+going, show up — done well.
+
 
 ---
 
@@ -196,36 +231,6 @@ Once it's running, press `r` in the terminal to hot reload after a change,
 
 ---
 
-## Current status
-
-**Working today:** the full pre-map flow — splash, onboarding, sign up and
-sign in (email/password with verification, and Google), profile setup, and
-the welcome hand-off. The map renders real Mapbox tiles centered on campus in
-both the custom light and dark styles, with courts drawn as markers. Light /
-dark / system theming works across every screen and persists between launches.
-
-**In progress — the v1 finish line:**
-
-- [ ] Persist profile setup to Firestore, so returning users skip it
-- [ ] Venue sheet — tap a court for its name, live player count, and actions
-- [ ] Check-in — "I'm going" now or scheduled, auto-expiring after ~2 hours
-- [ ] Live player counts syncing across users in realtime
-- [ ] Firestore security rules (required before any real check-in data flows)
-- [ ] Onboard the rest of the UTD courts (one is in the map data today)
-
-**Deliberately out of scope for v1:** streaks and badges, leaderboards,
-friends and chat, score keeping, background location, and multi-campus
-support. The goal for launch is that one flow — find a live court, say you're
-going, show up — done well.
-
----
-
-## Team
-
-- **[Samer Megla](https://github.com/samermegla)** — development: Flutter implementation, Firebase auth, Firestore data model, Mapbox GeoLo integration 
-- **Pablo Nguyen** — Product Design, UX flow, Map Stylist, Feedback Research
-
----
 
 ## License
 
