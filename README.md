@@ -222,8 +222,8 @@ going, show up — done well.
 
 ## Team
 
-- **[Samer Megla](https://github.com/samermegla)** — development: Flutter front end, Firebase auth, Firestore data model, Mapbox intergration
-- **Pablo Nguyen** — product and design feedback, UX testing
+- **[Samer Megla](https://github.com/samermegla)** — development: Flutter implementation, Firebase auth, Firestore data model, Mapbox GeoLo integration 
+- **Pablo Nguyen** — Product Design, UX flow, Map Stylist, Feedback Research
 
 ---
 
