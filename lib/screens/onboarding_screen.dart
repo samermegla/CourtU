@@ -38,98 +38,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       tag: 'Live',
       emoji: '🗺️',
       emojiFontSize: 104.55,
-      headline: 'Your courts.\nReal time.',
-      body: "See what's buzzing now.",
+      headline: 'Your courts\nin real time.',
+      body: "See what's buzzing now!",
       floats: [
         _FloatData(
           top: 24,
           right: 11,
-          child: _FloatBadge(text: '🔥 2 SPOTS LEFT!'),
-        ),
-        _FloatData(
-          bottom: 25,
-          left: 8,
-          child: _FloatBadge(text: '22/24 PLAYERS'),
+          child: _FloatBadge(text: "🔥 POPPIN'!"),
         ),
       ],
     ),
     _SlideData(
-      tag: 'Connect',
-      emoji: '🏐',
-      headline: 'Show up\ntogether.',
-      body: 'Tap onto a court to update others\n& rally up.',
-      floats: [
-        _FloatData(
-          bottom: 30,
-          right: 0,
-          child: _FloatPanel(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 8.r,
-                  height: 8.r,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                  ),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  '11 PLAYERS NEARBY',
-                  style: GoogleFonts.jetBrainsMono(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                    color: context.colors.steelLight,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      tag: 'Score',
+      emoji: '📋',
+      headline: 'Ad free\nscore keeper.',
+      body: 'TWEET TWEET!',
     ),
     _SlideData(
-      tag: 'Customize',
-      emoji: '🦕',
-      headline: 'Customize\nwith friends.',
-      body:
-          'Invite your friends to join!\nCharacter creation coming soon...',
-      floats: [
-        _FloatData(
-          top: 10,
-          // Negative: sits 3 past the card's right edge, clearing the dino's
-          // head now that the panel is translucent. The stack is Clip.none,
-          // so overhanging the card is fine.
-          right: -3,
-          child: _FloatPanel(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'CHAT:',
-                  style: GoogleFonts.jetBrainsMono(
-                    fontSize: 9.sp,
-                    letterSpacing: 1.2,
-                    color: context.colors.textSecondary,
-                  ),
-                ),
-                Text(
-                  "I'M GOING!",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w900,
-                    color: context.colors.steelLight,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      tag: 'Personalize',
+      emoji: '🙃',
+      headline: 'Customize\n+ friends.',
+      body: 'Avatar creation coming soon...\nApp is a WIP, enjoy early access!',
     ),
   ];
 
@@ -380,9 +309,7 @@ class _EmojiCard extends StatelessWidget {
           // Floating badges
           ...floats.map((f) => Positioned(
             top: f.top?.r,
-            left: f.left?.r,
             right: f.right?.r,
-            bottom: f.bottom?.r,
             child: f.child,
           )),
         ],
@@ -391,18 +318,17 @@ class _EmojiCard extends StatelessWidget {
   }
 }
 
+/// Only the edges the remaining floats actually use. Add `left`/`bottom` back
+/// (here and in the Positioned that reads them) if a badge ever needs anchoring
+/// to those edges again.
 class _FloatData {
   final double? top;
-  final double? left;
   final double? right;
-  final double? bottom;
   final Widget child;
 
   const _FloatData({
     this.top,
-    this.left,
     this.right,
-    this.bottom,
     required this.child,
   });
 }
@@ -562,15 +488,13 @@ class _SlideData {
 /// paged through. They all share this one now.
 class _FloatPanel extends StatelessWidget {
   final Widget child;
-  final EdgeInsetsGeometry? padding;
 
-  const _FloatPanel({required this.child, this.padding});
+  const _FloatPanel({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          padding ?? EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: context.colors.steel.withValues(alpha: 0.13),
         borderRadius: BorderRadius.circular(12.r),
@@ -596,7 +520,7 @@ class _FloatBadge extends StatelessWidget {
         style: GoogleFonts.jetBrainsMono(
           fontSize: 10.sp,
           fontWeight: FontWeight.bold,
-          color: context.colors.steelLight,
+          color: AppColors.badgeLabel,
         ),
       ),
     );

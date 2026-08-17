@@ -153,6 +153,11 @@ class AppColors {
   /// Brand orange. Distinct from the themed CTA color (`context.colors.accent`).
   static const brandOrange = Color(0xFFff6b35);
 
+  /// Onboarding float-badge label. Deliberately the same bright white in both
+  /// modes rather than a themed slot — it reads as a highlight on the badge's
+  /// glass plate, not as body text.
+  static const badgeLabel = Color(0xFFFFFFFF);
+
   /// Bright creamy red-orange — court markers on the map.
   static const courtMarker = Color(0xFFff6e4e);
 
