@@ -222,9 +222,8 @@ going, show up — done well.
 
 ## Team
 
-- **[Samer Megla](https://github.com/samermegla)** — backend, Firebase, and
-  data model
-- **Pablo Nguyen** — product and UX, front-end implementation, design system
+- **[Samer Megla](https://github.com/samermegla)** — development: Flutter front end, Firebase auth, Firestore data model, Mapbox intergration
+- **Pablo Nguyen** — product and design feedback, UX testing
 
 ---
 
