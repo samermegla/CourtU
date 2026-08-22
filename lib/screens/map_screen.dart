@@ -7,6 +7,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../config/mapbox_config.dart';
 import '../services/geolocation_service.dart';
 import '../services/court_service.dart';
+import '../widgets/im_going.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -33,6 +34,10 @@ class _MapScreenState extends State<MapScreen> {
 
   /// Court data loaded from Firestore, each a plain map with id + fields.
   List<Map<String, dynamic>> _courts = [];
+
+  /// Maps a drawn dot's annotation id back to its court, so a tap can find the
+  /// court it belongs to. Rebuilt each time the dots are (re)drawn.
+  final Map<String, Map<String, dynamic>> _courtByAnnotationId = {};
 
   @override
   void initState() {
@@ -96,7 +101,16 @@ class _MapScreenState extends State<MapScreen> {
   /// it to create the annotation manager, then draw whatever courts we have.
   Future<void> _onMapCreated(MapboxMap map) async {
     _courtManager = await map.annotations.createCircleAnnotationManager();
+    _courtManager!.tapEvents(onTap: _onCourtTapped);
     await _renderCourts();
+  }
+
+  /// Opens the court's bottom sheet when its dot is tapped. Ignores taps whose
+  /// annotation we don't recognise (e.g. a stale dot mid-redraw).
+  void _onCourtTapped(CircleAnnotation annotation) {
+    final court = _courtByAnnotationId[annotation.id];
+    if (court == null || !mounted) return;
+    ImGoingSheet.show(context, court: court);
   }
 
   /// Draws one dot per court. Guarded because the map and the Firestore fetch
@@ -107,8 +121,9 @@ class _MapScreenState extends State<MapScreen> {
     final manager = _courtManager;
     if (manager == null || _courts.isEmpty) return;
     await manager.deleteAll();
+    _courtByAnnotationId.clear();
     for (final court in _courts) {
-      await manager.create(
+      final annotation = await manager.create(
         CircleAnnotationOptions(
           geometry: Point(
             coordinates: Position(
@@ -116,12 +131,13 @@ class _MapScreenState extends State<MapScreen> {
               (court['latitude'] as num).toDouble(),
             ),
           ),
-          circleRadius: 8.0,
+          circleRadius: 7.5,
           circleColor: 0xFFEF6C00, // orange
-          circleStrokeWidth: 2.0,
+          circleStrokeWidth: 2.5,
           circleStrokeColor: 0xFFFFFFFF, // white outline
         ),
       );
+      _courtByAnnotationId[annotation.id] = court;
     }
   }
 

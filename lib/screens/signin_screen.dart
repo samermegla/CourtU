@@ -290,7 +290,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                       label: Text(
-                        'Continue with University SSO',
+                        'Continue with Google',
                         style: GoogleFonts.dmSans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
