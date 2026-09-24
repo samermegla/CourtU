@@ -128,8 +128,9 @@ flutter pub get
 flutter devices
 ```
 
-You should see your emulator listed (e.g. `emulator-5554`). If nothing shows
-up, start an emulator from Android Studio's Device Manager first.
+You should see your emulator listed (e.g. `emulator-5554`). For iOS, install
+Xcode and an iOS simulator runtime, run `open -a Simulator`, and use the iPhone
+device ID shown by `flutter devices`.
 
 ### 3. Add your Mapbox tokens
 
@@ -172,7 +173,16 @@ SDK from Mapbox's authenticated Maven repo.
 flutter run -d emulator-5554 --dart-define-from-file=config/secrets.json
 ```
 
-Swap `emulator-5554` for whatever `flutter devices` listed.
+Swap `emulator-5554` for whatever `flutter devices` listed, including an iOS
+simulator ID. The Mapbox public token is required on both platforms; the secret
+download token is only needed for Android builds.
+
+Firebase app configuration is already checked in. The app calls Firebase Auth
+and Firestore directly; this repo has no Cloud Functions source to run. The map
+loads court documents from Firestore and shows its built-in UTD court if the
+collection is empty or unavailable. To inspect or manage the shared Firebase
+project, ask a project owner to grant your Google account access to
+`courtu-44f73`.
 
 Once it's running, press `r` in the terminal to hot reload after a change,
 `R` to hot restart, `q` to quit.

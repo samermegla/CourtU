@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:geolocator/geolocator.dart';
 
 class LocationException implements Exception {
@@ -41,9 +43,20 @@ class GeolocationService {
  
   Future<Position> getCurrentLocation() async {
     await ensurePermission();
-    return Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: accuracy),
-    );
+    try {
+      return await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: accuracy,
+          timeLimit: const Duration(seconds: 10),
+        ),
+      );
+    } on TimeoutException {
+      throw const LocationException(
+        'Timed out waiting for a location fix.',
+      );
+    } catch (e) {
+      throw LocationException('Could not get current location: $e');
+    }
   }
 
   

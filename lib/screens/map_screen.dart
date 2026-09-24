@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import '../services/court_service.dart';
 import '../theme/colors.dart';
 import 'settings_screen.dart';
 
@@ -18,8 +19,7 @@ class MapStyles {
   static const light = 'mapbox://styles/pablo-nguyen/cmruw2j0g006601s8ac963sm4';
 }
 
-/// A campus court shown on the map. Plain in-memory data for now — no
-/// backend. Add more entries to [_courts] as courts are onboarded.
+/// A campus court shown on the map.
 class _Court {
   final String name;
   final double lat;
@@ -27,7 +27,7 @@ class _Court {
   const _Court({required this.name, required this.lat, required this.lng});
 }
 
-const _courts = <_Court>[
+const _fallbackCourts = <_Court>[
   _Court(name: 'UTD Sand Volleyball Courts', lat: 32.983313, lng: -96.74997),
 ];
 
@@ -42,11 +42,43 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   MapboxMap? _mapboxMap;
+  CircleAnnotationManager? _courtManager;
+  final CourtService _courtService = CourtService();
+  List<_Court> _courts = _fallbackCourts;
+  final Map<String, _Court> _courtByAnnotationId = {};
 
   /// Where the camera was before the last style swap. Switching light/dark
   /// rebuilds the map widget, which would otherwise snap back to the default
   /// UTD framing and lose wherever the user had panned to.
   CameraState? _lastCamera;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCourts();
+  }
+
+  Future<void> _loadCourts() async {
+    try {
+      final documents = await _courtService.fetchCourts();
+      final courts = <_Court>[];
+      for (final document in documents) {
+        final name = document['name'];
+        final lat = document['latitude'];
+        final lng = document['longitude'];
+        if (name is String && lat is num && lng is num) {
+          courts.add(
+            _Court(name: name, lat: lat.toDouble(), lng: lng.toDouble()),
+          );
+        }
+      }
+      if (!mounted || courts.isEmpty) return;
+      _courts = courts;
+      await _renderCourts();
+    } catch (error) {
+      debugPrint('Could not load courts from Firestore: $error');
+    }
+  }
 
   Future<void> _onMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
@@ -67,7 +99,11 @@ class _MapScreenState extends State<MapScreen> {
     // logo but bottom-RIGHT for the (i), both with zero margins. Being
     // explicit keeps the two platforms in agreement.
     await mapboxMap.logo.updateSettings(
-      LogoSettings(position: OrnamentPosition.BOTTOM_LEFT, marginLeft: 4, marginBottom: 4),
+      LogoSettings(
+        position: OrnamentPosition.BOTTOM_LEFT,
+        marginLeft: 4,
+        marginBottom: 4,
+      ),
     );
     await mapboxMap.attribution.updateSettings(
       AttributionSettings(
@@ -91,8 +127,21 @@ class _MapScreenState extends State<MapScreen> {
     // gives both platforms the same result.
     await mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
 
-    final manager = await mapboxMap.annotations.createCircleAnnotationManager();
+    _courtManager = await mapboxMap.annotations.createCircleAnnotationManager();
+    _courtManager!.tapEvents(
+      onTap: (annotation) {
+        final court = _courtByAnnotationId[annotation.id];
+        if (court != null) _openVenueSheet(court);
+      },
+    );
+    await _renderCourts();
+  }
 
+  Future<void> _renderCourts() async {
+    final manager = _courtManager;
+    if (manager == null) return;
+    await manager.deleteAll();
+    _courtByAnnotationId.clear();
     for (final court in _courts) {
       final geometry = Point(coordinates: Position(court.lng, court.lat));
       final markerColor = AppColors.courtMarker.toARGB32();
@@ -107,7 +156,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
       // Tighter, stronger inner glow — gives the halo more drama.
-      await manager.create(
+      final core = await manager.create(
         CircleAnnotationOptions(
           geometry: geometry,
           circleRadius: 24,
@@ -117,7 +166,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
       // Bright core dot (15% bigger than before) with a thin white rim.
-      await manager.create(
+      final center = await manager.create(
         CircleAnnotationOptions(
           geometry: geometry,
           circleRadius: 8.05,
@@ -127,12 +176,9 @@ class _MapScreenState extends State<MapScreen> {
           circleStrokeOpacity: 0.85,
         ),
       );
+      _courtByAnnotationId[core.id] = court;
+      _courtByAnnotationId[center.id] = court;
     }
-
-    // Non-deprecated tap API. One court for now, so any dot tap opens it;
-    // once there are multiple courts, match the tapped annotation to a court
-    // (e.g. via customData or an id→court map) instead of using .first.
-    manager.tapEvents(onTap: (_) => _openVenueSheet(_courts.first));
   }
 
   void _openVenueSheet(_Court court) {
@@ -151,9 +197,12 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _mapboxMap?.getCameraState().then((c) {
-      if (mounted) _lastCamera = c;
-    }).catchError((_) {});
+    _mapboxMap
+        ?.getCameraState()
+        .then((c) {
+          if (mounted) _lastCamera = c;
+        })
+        .catchError((_) {});
   }
 
   @override
@@ -176,8 +225,9 @@ class _MapScreenState extends State<MapScreen> {
               key: ValueKey(isDark),
               onMapCreated: _onMapCreated,
               styleUri: isDark ? MapStyles.dark : MapStyles.light,
-              cameraOptions: CameraOptions(
-                center: _lastCamera?.center ??
+              viewport: CameraViewportState(
+                center:
+                    _lastCamera?.center ??
                     Point(coordinates: Position(-96.7502, 32.9857)),
                 zoom: _lastCamera?.zoom ?? 14.3,
               ),
@@ -207,9 +257,9 @@ class _SettingsButton extends StatelessWidget {
           shape: CircleBorder(side: BorderSide(color: context.colors.border)),
           child: InkWell(
             customBorder: const CircleBorder(),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SettingsScreen()),
-            ),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
             child: Padding(
               padding: EdgeInsets.all(10.r),
               child: Icon(

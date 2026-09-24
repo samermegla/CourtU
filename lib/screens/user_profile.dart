@@ -4,12 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/colors.dart';
 import '../widgets/logo_wordmark.dart';
 import '../widgets/auth_field.dart';
-import '../services/firestore_service.dart';
+import '../services/user_profile_service.dart';
 import '../services/auth_service.dart';
 import 'welcome_screen.dart';
 
-/// Palette choices for the player puck. Colors are persisted as ARGB ints and
-/// the hat as its [HatOption.id]; the map later rebuilds the avatar from these.
+//Skin tones
 const List<Color> skinTones = [
   Color(0xFFF8D5C2),
   Color(0xFFF0C0A0),
@@ -30,7 +29,6 @@ const List<Color> jerseyColors = [
   Colors.white,
 ];
 
-/// A hat the user can put on their puck. An empty [emoji] means "no hat".
 class HatOption {
   final String id;
   final String emoji;
@@ -47,8 +45,7 @@ const List<HatOption> hats = [
   HatOption('grad', '🎓', 'Grad'),
 ];
 
-/// Volleyball positions offered on the third onboarding slide. The label is
-/// also what we persist to the profile.
+
 const List<String> positions = [
   'Outside Hitter',
   'Middle Blocker',
@@ -58,18 +55,6 @@ const List<String> positions = [
   'Not sure yet',
 ];
 
-/// How competitive the player is, offered on the fourth onboarding slide. The
-/// label is also what we persist to the profile.
-const List<String> competitiveLevels = [
-  'Just for fun',
-  'Balanced',
-  'Highly competitive',
-];
-
-/// Onboards a freshly signed-up user across two slides: first their name, then
-/// a "make it yours" slide to build their circular map puck (skin, jersey, and
-/// hat). The AuthGate routes here whenever a verified account has no display
-/// name yet, so this is the last stop before the map.
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
 
@@ -78,23 +63,17 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final _firestoreService = FirestoreService();
+  final _profileService = UserProfileService();
   final _nameController = TextEditingController(); //holds the username
   final _authService = AuthService();
 
-  // 0 = name, 1 = "make it yours", 2 = position, 3 = competitiveness.
   int _step = 0;
 
-  // The player puck being built.
   Color _skin = skinTones[1];
   Color _jersey = jerseyColors[0];
   String _hat = hats.first.id;
 
-  // Chosen volleyball position (null until they pick one).
   String? _position;
-
-  // Chosen competitiveness level (null until they pick one).
-  String? _competitiveness;
 
   bool _isLoading = false;
 
@@ -124,12 +103,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   // Step 1 → step 2. The puck is held in state until the final save.
   void _handlePuckContinue() => setState(() => _step = 2);
 
-  // Step 2 → step 3.
-  void _handlePositionContinue() => setState(() => _step = 3);
-
-  // Step 3 → welcome transition. Persists the whole profile (name + puck +
-  // position + competitiveness), then hands off to the greeting, which saves
-  // the display name when done.
+  // Step 2 → welcome transition. Persists the whole profile (name + puck +
+  // position), then hands off to the greeting, which saves the display name
+  // when done.
   Future<void> _handleFinish() async {
     final name = _nameController.text.trim();
     setState(() => _isLoading = true);
@@ -138,7 +114,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     try {
       final user = _authService.currentUser;
       if (user != null) {
-        await _firestoreService.createProfile(
+        await _profileService.createProfile(
           uid: user.uid,
           name: name,
           email: user.email,
@@ -146,7 +122,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           jerseyColor: _jersey.toARGB32(),
           hat: _hat,
           position: _position,
-          competitiveness: _competitiveness,
         );
       }
 
@@ -208,8 +183,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             child: switch (_step) {
               0 => _buildNameStep(),
               1 => _buildPuckStep(),
-              2 => _buildPositionStep(),
-              _ => _buildCompetitiveStep(),
+              _ => _buildPositionStep(),
             },
           ),
         ),
@@ -236,14 +210,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               height: 1.0,
               letterSpacing: 0.64,
             ),
-          ),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          'This is the name your teammates will see.',
-          style: GoogleFonts.dmSans(
-            fontSize: 14.sp,
-            color: AppColors.mutedForeground,
           ),
         ),
         SizedBox(height: 28.h),
@@ -404,63 +370,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         _GradientButton(
-          label: 'CONTINUE',
-          // Require a choice before advancing.
-          onTap: _position == null ? null : _handlePositionContinue,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCompetitiveStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(height: 12.h),
-        _backHeader(),
-        SizedBox(height: 20.h),
-        Text(
-          'how competitive are you?',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.barlowCondensed(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-            height: 1.0,
-            letterSpacing: 0.64,
-          ),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          'This helps us match you with the right games.',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.dmSans(
-            fontSize: 14.sp,
-            color: AppColors.mutedForeground,
-          ),
-        ),
-        SizedBox(height: 24.h),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final level in competitiveLevels) ...[
-                  _ChoiceRow(
-                    label: level,
-                    selected: level == _competitiveness,
-                    onTap: () => setState(() => _competitiveness = level),
-                  ),
-                  SizedBox(height: 12.h),
-                ],
-              ],
-            ),
-          ),
-        ),
-        _GradientButton(
           label: _isLoading ? 'SAVING...' : 'CONTINUE',
           // Require a choice before finishing.
-          onTap: (_isLoading || _competitiveness == null) ? null : _handleFinish,
+          onTap: (_isLoading || _position == null) ? null : _handleFinish,
           loading: _isLoading,
         ),
       ],
