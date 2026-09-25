@@ -25,7 +25,10 @@ final themeController = ThemeController();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MapboxOptions.setAccessToken(
-    const String.fromEnvironment('MAPBOX_ACCESS_TOKEN'),
+    const String.fromEnvironment(
+      'MAPBOX_ACCESS_TOKEN',
+      defaultValue: 'pk.eyJ1IjoicGFibG8tbmd1eWVuIiwiYSI6ImNtcnB5dDZ0ajAzc3oyd3EzajU0dWFmc2wifQ.msemuLg4bUmCjB0sREiDjA',
+    ),
   );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

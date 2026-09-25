@@ -132,14 +132,15 @@ You should see your emulator listed (e.g. `emulator-5554`). For iOS, install
 Xcode and an iOS simulator runtime, run `open -a Simulator`, and use the iPhone
 device ID shown by `flutter devices`.
 
-### 3. Add your Mapbox tokens
+### 3. Mapbox tokens
 
 The map needs **two different tokens** from
 [account.mapbox.com](https://account.mapbox.com/access-tokens/). This trips
 people up, so to be explicit:
 
-**a) The public token** — used by the app at runtime to load map tiles.
-Copy the template and paste your token in:
+**a) The public token** — used by the app at runtime to load map tiles. The
+project's public token is the default, so no setup is needed to run iOS. To
+use your own Mapbox account, copy the template and paste your public token in:
 
 ```bash
 cp config/secrets.example.json config/secrets.json
@@ -170,12 +171,13 @@ SDK from Mapbox's authenticated Maven repo.
 ### 4. Run
 
 ```bash
-flutter run -d emulator-5554 --dart-define-from-file=config/secrets.json
+flutter run -d <device-id>
 ```
 
-Swap `emulator-5554` for whatever `flutter devices` listed, including an iOS
-simulator ID. The Mapbox public token is required on both platforms; the secret
-download token is only needed for Android builds.
+Use the ID from `flutter devices`. On Ron's iPhone, the command is
+`flutter run -d 00008140-001A61E60A6A801C`. If you created your own
+`config/secrets.json`, append `--dart-define-from-file=config/secrets.json`.
+The secret Mapbox download token is only needed for Android builds.
 
 Firebase app configuration is already checked in. The app calls Firebase Auth
 and Firestore directly; this repo has no Cloud Functions source to run. The map
